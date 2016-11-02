@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <body>
+	    <ui:composition>
+                <ul id="dropDownMenuCompte" class="dropdown-content">
+                    <li><a href="#!">one</a></li>
+                    <li><a href="#!">two</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!">three</a></li>
+                </ul>
+                <ul id="dropDownMenu" class="side-nav">
+                    <li><a href="#!">one</a></li>
+                    <li><a href="#!">two</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!">three</a></li>
+                </ul>
+                <div class="navbar-fixed">
+                    <nav class="green">
+                        <div class="nav-wrapper">
+                            <a href="#!" class="brand-logo">Logo</a>
+                            <a href="#" data-activates="dropDownMenu" class="button-collapse"><i class="material-icons">menu</i></a>
+                            
+                            <ul class="right">
+                                
+                                <a class="dropdown-button" data-beloworigin="true" href="#!" data-activates="dropDownMenuCompte"><i class="material-icons">arrow_drop_down</i></a>
+                            </ul>
+                            <ul class="right hide-on-med-and-down">
+                                <li><a href="sass.html">Sass</a></li>
+                                <li><a href="badges.html">Components</a></li>
+                            </ul>
+                            
+                        </div>
+                    </nav>
+                </div>
+                <a class="btn-floating btn-large waves-effect waves-light green" style="position:fixed;bottom:10px;right:10px"><i class="material-icons">add</i></a>
+	    </ui:composition>
+    </body>
+</html>
