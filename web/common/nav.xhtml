@@ -6,37 +6,36 @@
       >
     <body>
 	    <ui:composition>
-                <ul id="dropDownMenuCompte" class="dropdown-content">
-                    <li><a href="#!">one</a></li>
-                    <li><a href="#!">two</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#!">three</a></li>
-                </ul>
-                <ul id="dropDownMenu" class="side-nav">
-                    <li><a href="#!">one</a></li>
-                    <li><a href="#!">two</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#!">three</a></li>
-                </ul>
                 <div class="navbar-fixed">
-                    <nav class="green">
+                    <nav class=" light-green darken-3">
                         <div class="nav-wrapper">
-                            <a href="#!" class="brand-logo">Logo</a>
-                            <a href="#" data-activates="dropDownMenu" class="button-collapse"><i class="material-icons">menu</i></a>
-                            
-                            <ul class="right">
-                                
-                                <a class="dropdown-button" data-beloworigin="true" href="#!" data-activates="dropDownMenuCompte"><i class="material-icons">arrow_drop_down</i></a>
+                            <a href="#!" class="brand-logo">Logo</a>    
+                            <form id="search" style="display:none;">
+                                <div class="input-field">
+                                    <input id="search" type="search" required="required"/>
+                                    <label for="search" class="active"><i class="material-icons">search</i></label>
+                                    <i class="material-icons">close</i>
+                                </div>
+                            </form>
+                            <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
+                                <li><a href="compte.xhtml"><i class="large material-icons">perm_identity</i></a></li>
+                                <ul>
+                                    <li><a class="btn-floating light-green darken-2" href="#!"><i class="material-icons" style='margin-top:-10px;'>question_answer</i></a></li>
+                                    <li style='margin-top:-20px;'><a class="btn-floating light-green darken-2" href="#!"><i class="material-icons" style='margin-top:-10px;'>thumbs_up_down</i></a></li>
+                                    <li style='margin-top:-20px;'><a class="btn-floating light-green darken-2" href="#!"><i class="material-icons" style='margin-top:-10px;'>settings</i></a></li>
+                                    <li style='margin-top:-20px;'><a class="btn-floating light-green darken-2" href="#!"><i class="material-icons" style='margin-top:-10px;'>input</i></a></li>
+                                </ul>
                             </ul>
-                            <ul class="right hide-on-med-and-down">
-                                <li><a href="sass.html">Sass</a></li>
-                                <li><a href="badges.html">Components</a></li>
+                            <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
+                                <li><a href="#" data-activates="search"><i class="material-icons">my_location</i></a></li>
                             </ul>
+                            <a class="waves-effect waves-light btn right orange darken-4" style='margin-top:13px;'><i class="material-icons left" style='margin-top:-13px;'>add</i>Bon débarras</a>
                             
                         </div>
+                        
                     </nav>
                 </div>
-                <a class="btn-floating btn-large waves-effect waves-light green" style="position:fixed;bottom:10px;right:10px"><i class="material-icons">add</i></a>
+                <a class="btn-floating btn-large waves-effect waves-light  orange darken-4" style="position:fixed;bottom:10px;right:10px"><i class="material-icons">add</i></a>
 	    </ui:composition>
     </body>
 </html>
