@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <body>
+    <ui:composition>
+        <ui:define name="insconnect"></ui:define>
+        <!-- Modal Structure -->
+                <div id="modal-inscription" class="modal">
+                    <div class="modal-content">
+                        <h4>Inscription</h4>
+                        <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">email</i>
+                                    <h:inputText id="ins_email" class="validate" required='true' value='#{i.email}'>
+                                        <f:validateRegex
+		pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                </h:inputText>
+                                    <label for="icon_prefix">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">my_location</i>
+                                    <h:inputText id="ins_code_postal" class="validate" required='true' value='#{i.CPostal}'/>
+                                    <label for="icon_prefix">Code postal</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">   
+                                    <i class="material-icons prefix">lock_outline</i>
+                                    <h:inputSecret id="ins_passe1" class="validate" required='true' value='#{i.passe1}'/>
+                                    <label for="icon_prefix">Mot de passe</label>
+                                </div>  
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">          
+                                    <i class="material-icons prefix">lock_outline</i>
+                                    <h:inputSecret id="ins_passe2" class="validate" required='true' value='#{i.passe2}'/>
+                                    <label for="icon_prefix">Mot de passe</label>
+                                </div>
+                            </div>                        
+                            <div class="modal-footer">
+                                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
+                                <h:commandButton action="#{i.save()}" value="S'inscire" class="waves-effect waves-green btn-flat"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div> 
+        <!-- Modal Structure -->
+                <div id="modal-connexion" class="modal">
+                    <div class="modal-content">
+                        <h4>Connexion</h4>
+                        <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">email</i>
+                                    <h:inputText id="ins_email" class="validate" required='true' value='#{c.email}'>
+                                     <f:validateRegex
+		pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                </h:inputText>
+                                    <label for="icon_prefix">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">   
+                                    <i class="material-icons prefix">lock_outline</i>
+                                    <h:inputSecret id="ins_passe" class="validate" required='true' value='#{c.passe}'/>
+                                    <label for="icon_prefix">Mot de passe</label>
+                                </div>  
+                            </div>                        
+                            <div class="modal-footer">
+                                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
+                                <h:commandButton action="#{c.save()}" value="Se connecter" class="waves-effect waves-green btn-flat"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div> 
+            <!-- Modal Structure -->
+                <div id="modal-localisation" class="modal">
+                    <div class="modal-content">
+                        <h4>Localisation de votre position</h4>
+                        <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">location_on</i>
+                                    <h:inputText id="icon_prefix" value="#{i.CPostal}" class="validate" required="true"/>
+                                    <label for="icon_prefix">Code postal</label>
+                                </div>
+                            </div>                        
+                            <div class="modal-footer">
+                                <h:commandButton action="#{i.save}" value="Enregistrer" class="waves-effect waves-green btn-flat"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div> 
+            <div class="inline green">
+                <section class="container center">
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-connexion" data-activates="search" style="margin:10px;"><i class="material-icons left">perm_identity</i>Connexion</a>  
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-inscription" data-activates="search" style="margin:10px;"><i class="material-icons left">perm_identity</i>Inscription</a>
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-localisation" data-activates="search" style="margin:10px;"><i class="material-icons left">my_location</i>Localisation</a>
+                </section>
+                </div>
+    </ui:composition>
+    </body>
+</html>

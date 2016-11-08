@@ -21,9 +21,9 @@
 <h:body>
         <ui:insert name="nav">
             <ui:include src="/common/nav.xhtml" />
-        </ui:insert>
-        <ui:insert name="search">
-            <ui:include src="/common/search.xhtml" />
+        </ui:insert>        
+        <ui:insert name="insconnect">
+            <ui:include src="/common/insconnect.xhtml" />
         </ui:insert>
         <ui:insert name="content"/>
         <ui:insert name="aside">
@@ -37,6 +37,7 @@
     <script type="text/javascript">
         $( document ).ready(function(){
             $(".button-collapse").sideNav();
+            $('.modal').modal();
         });
         </script>
 </h:body>

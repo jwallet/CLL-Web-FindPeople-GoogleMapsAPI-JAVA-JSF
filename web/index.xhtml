@@ -8,14 +8,13 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-    <h:body>
-
-    	<ui:composition template="/common/template.xhtml">
-            <ui:define name="title">MAIN FUCKING PAGE</ui:define>
+    	<ui:composition template="common/template.xhtml">
+            <ui:define name="title">Index</ui:define>
     		<ui:define name="content">
-                    <section>
-    			<h4>titre de la page</h4>
-                    </section>
+                    <section class="container">
+                        <h4>#{c.email}</h4>
+                        <h4>#{c.passe}</h4>
+                        <h4>#{c.connecterStatus}</h4>
                     <article>un site que vous devez vous inscrire votre code postal, la distance
                     que vous voulez predefinir en km (1km (a pieds) ou 5km (en voiture) aux alentours par exemple),ensuite
                     la liste des personnes concordant a votre profil seront afficher (meme chose pour eux), les anciens membres
@@ -31,14 +30,10 @@
                         https://maps.googleapis.com/maps/api/geocode/json?address=g6c1p9, jutilise cette algo pour recuperer
                         la distance en km http://andrew.hedges.name/experiments/haversine/, et en faire un deriver de radius
                         pour un 5km aux alentours, si les usagers dans la bd sont a linterieur. je peux utiliser cet api pour
-                        connaitre la distance entre deux adresses et le traffic http://maps.googleapis.com/maps/api/distancematrix/json?origins=G6C1P9!destinations=G6V6Y9!mode=walking!language=fr-CA!sensor=false</article>
-                    <section>
+                        connaitre la distance entre deux adresses et le traffic http://maps.googleapis.com/maps/api/distancematrix/json?origins=G6C1P9!destinations=G6V6Y9!mode=walking!language=fr-CA!sensor=false
+                    </article>
                         Pages: 1 - 2 - 3
                     </section>
     		</ui:define>
-
     	</ui:composition>
-
-    </h:body>
-
 </html>
