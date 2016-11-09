@@ -10,7 +10,8 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
     <body>
     <ui:composition>
         <ui:define name="insconnect"></ui:define>
@@ -23,37 +24,34 @@ and open the template in the editor.
                             <div class="col">
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">email</i>
-                                    <h:inputText id="ins_email" class="validate" required='true' value='#{i.email}'>
-                                        <f:validateRegex
-		pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-                                </h:inputText>
+                                    <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{i.email}'/>
                                     <label for="icon_prefix">Email</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">my_location</i>
-                                    <h:inputText id="ins_code_postal" class="validate" required='true' value='#{i.CPostal}'/>
+                                    <input type="text" id="ins_code_postal" class="validate" required='true' maxlength="6" jsf:value='#{i.CPostal}'/>
                                     <label for="icon_prefix">Code postal</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="input-field col s6">   
-                                    <i class="material-icons prefix">lock_outline</i>
-                                    <h:inputSecret id="ins_passe1" class="validate" required='true' value='#{i.passe1}'/>
+                                    <i class="material-icons prefix">lock</i>
+                                    <input type="password" id="ins_passe1" class="validate" required='true' jsf:value='#{i.passe1}'/>
                                     <label for="icon_prefix">Mot de passe</label>
                                 </div>  
                             </div>
                             <div class="col">
                                 <div class="input-field col s6">          
-                                    <i class="material-icons prefix">lock_outline</i>
-                                    <h:inputSecret id="ins_passe2" class="validate" required='true' value='#{i.passe2}'/>
+                                    <i class="material-icons prefix">lock</i>
+                                    <input type="password" id="ins_passe2" class="validate" required='true' jsf:value='#{i.passe2}'/>
                                     <label for="icon_prefix">Mot de passe</label>
                                 </div>
                             </div>                        
                             <div class="modal-footer">
                                 <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
-                                <h:commandButton action="#{i.save()}" value="S'inscire" class="waves-effect waves-green btn-flat"/>
+                                <h:commandButton action="#{c.save()}" value="S'inscire" class="waves-effect waves-green btn-flat"/>
                             </div>
                         </h:form>
                     </div>
@@ -67,20 +65,18 @@ and open the template in the editor.
                             <div class="col">
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">email</i>
-                                    <h:inputText id="ins_email" class="validate" required='true' value='#{c.email}'>
-                                     <f:validateRegex
-		pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-                                </h:inputText>
+                                    <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{c.email}'/>
                                     <label for="icon_prefix">Email</label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="input-field col s6">   
-                                    <i class="material-icons prefix">lock_outline</i>
-                                    <h:inputSecret id="ins_passe" class="validate" required='true' value='#{c.passe}'/>
+                                    <i class="material-icons prefix">lock</i>
+                                    <input type="password" id="ins_passe" class="validate" required='true' jsf:value='#{c.passe}'/>
                                     <label for="icon_prefix">Mot de passe</label>
-                                </div>  
-                            </div>                        
+                                </div>                                  
+                            </div> 
+                            <h:commandLink style="margin-left:50px;" action="#{c.oublier}" value="Mot de passe oublié? Envoyez-moi un email"/>
                             <div class="modal-footer">
                                 <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
                                 <h:commandButton action="#{c.save()}" value="Se connecter" class="waves-effect waves-green btn-flat"/>
@@ -97,23 +93,44 @@ and open the template in the editor.
                             <div class="col">
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">location_on</i>
-                                    <h:inputText id="icon_prefix" value="#{i.CPostal}" class="validate" required="true"/>
+                                    <input type="text" id="icon_prefix" jsf:value="#{g.codePostal}" class="validate" maxlength="6" required="true"/>
                                     <label for="icon_prefix">Code postal</label>
                                 </div>
                             </div>                        
                             <div class="modal-footer">
-                                <h:commandButton action="#{i.save}" value="Enregistrer" class="waves-effect waves-green btn-flat"/>
+                                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
+                                <h:commandButton action="#{g.save}" value="Enregistrer" class="waves-effect waves-green btn-flat"/>
                             </div>
                         </h:form>
                     </div>
                 </div> 
-            <div class="inline green">
+            <div class="inline green hide-on-med-and-down">
                 <section class="container center">
-                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-connexion" data-activates="search" style="margin:10px;"><i class="material-icons left">perm_identity</i>Connexion</a>  
-                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-inscription" data-activates="search" style="margin:10px;"><i class="material-icons left">perm_identity</i>Inscription</a>
-                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-localisation" data-activates="search" style="margin:10px;"><i class="material-icons left">my_location</i>Localisation</a>
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-connexion" data-activates="" style="margin: 5px;"><i class="material-icons left">lock</i>Connexion</a>  
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-inscription" data-activates="" style="margin: 5px;"><i class="material-icons left">enhanced_encryption</i>Inscription</a>
+                    <c:if test="#{empty g.codePostal}"><a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-localisation" data-activates="" style="margin: 10px;"><i class="material-icons left">location_on</i>Localisation</a></c:if>
                 </section>
-                </div>
+            </div>
+            <div class="fixed-action-btn click-to-toggle hide-on-large-only">
+                <a class="btn-floating btn-large light-green accent-4">
+                    <i class="material-icons">person</i>
+                </a>
+                <ul>
+                <!--<li><a href="#modal-connexion" class="btn-floating purple"><i class="material-icons">vpn_key</i></a></li>
+                    <li><a href="#modal-inscription" class="btn-floating red"><i class="material-icons">add</i></a></li>                        
+                    <li><a href="#modal-localisation" class="btn-floating blue"><i class="material-icons">my_location</i></a></li>-->
+                    <li><a href="#modal-connexion" class="btn-floating green"><i class="material-icons">lock</i></a></li>
+                    <li><a href="#modal-inscription" class="btn-floating green"><i class="material-icons">enhanced_encryption</i></a></li>                        
+                    <li><a href="#modal-localisation" class="btn-floating green"><i class="material-icons">my_location</i></a></li>
+                </ul>
+            </div>
+            <script type="text/javascript">
+            $( document ).ready(function(){
+                $('.modal').modal({
+                   dismissible: false               
+                });
+            });
+            </script>
     </ui:composition>
     </body>
 </html>

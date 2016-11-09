@@ -5,6 +5,12 @@
  */
 package inscription;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
@@ -12,6 +18,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @ManagedBean
 @SessionScoped
@@ -20,6 +28,10 @@ public class c {
     private String userEmail = "";
     private String userCodePostal = "";
     private String userPasse = "";
+    
+    private String userZoom = "12";
+    private String userGPSlon = "";
+    private String userGPSlat = "";
     
     private int dbIdCompte = 0;
     private String dbEmail = "";
@@ -69,6 +81,23 @@ public class c {
     {
         return connecter_succes;
     }
+    
+    public String setDeconnexion()
+    {
+        userEmail = "";
+        userCodePostal = "";
+        userPasse = "";
+        connecter_succes=false;
+        return "index.xhtml";
+    }
+    
+    public String getOublier()
+    {
+        String page = "passeoublie.xhtml";
+        return page;
+    }
+    
+    
     public String getEmail()
     {
         return userEmail;
@@ -88,8 +117,8 @@ public class c {
     {
         this.userPasse = p1;
     }
-    
-    public boolean save() throws ClassNotFoundException, SQLException
+   
+    public void save() throws ClassNotFoundException, SQLException
     {
         ResultSet rs;
         PreparedStatement pst;
@@ -126,7 +155,12 @@ public class c {
         }
         
         connecter_succes = dbEmail.equals(userEmail) && dbPasse.equals(userPasse);
-        return connecter_succes;
+
     }   
+    
+    public void recentrerSurCPostal() {
+        //sassurer de recentrer selon les donnees recueillis dans classe G et classe C
+        //trouver moyen d importer la classe
+    }
     
 }

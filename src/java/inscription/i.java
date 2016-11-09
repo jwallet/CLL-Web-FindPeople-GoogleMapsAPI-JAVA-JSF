@@ -21,6 +21,8 @@ public class i {
     private String userCodePostal = "";
     private String userPasse1 = "";
     private String userPasse2 = "";
+    private int userGPSlat = 0;
+    private int userGPSlon = 0;
     
     private int dbIdCompte = 0;
     private String dbEmail = "";
@@ -58,10 +60,8 @@ public class i {
             System.out.println(ex.getMessage());
         }
         finally{
-        }
-        
-        return con;
-        
+        }        
+        return con;        
     }
     
     public boolean getInscritStatus()
@@ -112,44 +112,44 @@ public class i {
         }
     }
     
-    public boolean save() throws ClassNotFoundException, SQLException
+    public void save() throws ClassNotFoundException, SQLException
     {
-        ResultSet rs;
-        PreparedStatement pst;
-        Connection con = this.getConnexion();
-        
-        String stm = ""; //insert
-      
-        try
+        boolean PasseMatches = false;
+        boolean CodePostalValide = false;
+        if(!userPasse1.equals(userPasse2))
         {
-            pst = con.prepareStatement(stm);
-            pst.executeUpdate();
-            rs = pst.getResultSet();
-            while(rs.next()){
-                dbIdCompte = rs.getInt(1);
-                dbEmail = rs.getString(2);
-                dbCodePostal = rs.getString(3);
-                dbPasse = rs.getString(4);
-                dbGPSlat = rs.getInt(5);
-                dbGPSlon = rs.getInt(6);
-                dbNoRue = rs.getInt(7);
-                dbNomRue = rs.getString(8);
-                dbVoisinage = rs.getString(9);
-                dbVille = rs.getString(10);
-                dbProvince = rs.getString(11);
-                dbPays = rs.getString(12);
-                dbTelephone = rs.getInt(13);
-                dbCellulaire = rs.getInt(14);
-                dbPseudo = rs.getString(15);
+            PasseMatches = true;
+        }
+        if(!userCodePostal.matches("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$"))
+        {
+            CodePostalValide = true;
+        }
+        else
+        {
+            //use google api to find gps lat and lon (localisation)
+        }
+        
+        if(PasseMatches && CodePostalValide)
+        {
+            ResultSet rs;
+            PreparedStatement pst;
+            Connection con = this.getConnexion();
+
+            String stm = "INSERT INTO compte(email,cpostal,passe) values($,$,$)"; //insert
+
+            try
+            {
+                pst = con.prepareStatement(stm);
+                pst.setString(1, userEmail);
+                pst.setString(2, userCodePostal);           
+                pst.setString(3, userPasse1);
+                pst.executeUpdate();            
+            }
+            catch (SQLException ex){
+                System.out.println("in exec");
+                System.out.println(ex.getMessage());
             }
         }
-        catch (SQLException ex){
-            System.out.println("in exec");
-            System.out.println(ex.getMessage());
-        }
-        
-        inscrit_succes = false;//tempo
-        return inscrit_succes;
     }     
     
 }

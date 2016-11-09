@@ -7,7 +7,6 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-    
 <h:head>    
     <title><ui:insert name="title"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -17,28 +16,24 @@
     <link rel="stylesheet" type="text/css" href="resources/css/materialize.css"/>
     <link rel="stylesheet" type="text/css" href="resources/css/lightbox.css"/>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIheDqwlFxarDeQmg0N5mRv8tlD7T-LBk"
+    type="text/javascript"></script>
 </h:head>
 <h:body>
         <ui:insert name="nav">
             <ui:include src="/common/nav.xhtml" />
-        </ui:insert>        
-        <ui:insert name="insconnect">
-            <ui:include src="/common/insconnect.xhtml" />
-        </ui:insert>
-        <ui:insert name="content"/>
-        <ui:insert name="aside">
-            <ui:include src="/common/aside.xhtml" />
-        </ui:insert>
+        </ui:insert> 
+        <c:if test="#{!c.connecterStatus}">
+            <ui:insert name="insconnect">
+                <ui:include src="/common/insconnect.xhtml" />
+            </ui:insert>
+        </c:if>
+        <ui:insert name="content"/>        
         <ui:insert name="footer">
             <ui:include src="/common/footer.xhtml" />
         </ui:insert> 
     <script src="resources/js/lightbox.js"/>
     <script src="resources/js/materialize.min.js"/> 
-    <script type="text/javascript">
-        $( document ).ready(function(){
-            $(".button-collapse").sideNav();
-            $('.modal').modal();
-        });
-        </script>
+    
 </h:body>
 </html>
