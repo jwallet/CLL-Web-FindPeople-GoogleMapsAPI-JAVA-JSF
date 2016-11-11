@@ -12,10 +12,18 @@
     	<ui:composition template="common/template.xhtml">
             <ui:define name="title">Index</ui:define>
     		<ui:define name="content">
-  <!--                  <section class="container">
-                        <h4>#{c.email}</h4>
-                        <h4>#{c.passe}</h4>
-                        <h4>#{c.connecterStatus}</h4>
+                   <section class="container">
+                        #{c.email}
+                        #{c.passe}
+                        #{c.connecterStatus}
+                        #{c.dbEmail}
+                        #{c.dbPasse}
+                        #{c.codePostal}
+                        #{c.GPSlat}
+                        #{c.GPSlon}
+                        #{c.tempCodePostal}
+                   </section>
+                    <!--
                     <article>un site que vous devez vous inscrire votre code postal, la distance
                     que vous voulez predefinir en km (1km (a pieds) ou 5km (en voiture) aux alentours par exemple),ensuite
                     la liste des personnes concordant a votre profil seront afficher (meme chose pour eux), les anciens membres
@@ -36,7 +44,7 @@
                     </section>-->
                     <f:view>
                             <h:form id="form">
-                                <m:map zoom="#{g.zoom}"  width="100%" height="800px" longitude="#{g.GPSlon}" latitude="#{g.GPSlat}" showDefaultControls="false" binding="#{g.map}" >
+                                <m:map zoom="#{c.zoom}"  width="100%" height="90vh" longitude="#{c.GPSlon}" latitude="#{c.GPSlat}" showDefaultControls="false" binding="#{c.map}" >
                                     </m:map>
                             </h:form>
                     </f:view>
