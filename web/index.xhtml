@@ -13,6 +13,13 @@
             <ui:define name="title">Index</ui:define>
     		<ui:define name="content">
                    <section class="container">
+                       <c:if test="#{!empty c.tempCodePostal || c.connecterStatus}">
+                        <div class="fixed-action-btn">
+                            <h:form>
+                                <h:commandLink class="btn-floating btn-large waves-effect waves-light yellow darken-4" action="index.xhtml"><i class="large material-icons">my_location</i></h:commandLink>
+                            </h:form>
+                        </div>
+                    </c:if>
                         #{c.email}
                         #{c.passe}
                         #{c.connecterStatus}
@@ -42,11 +49,21 @@
                         connaitre la distance entre deux adresses et le traffic http://maps.googleapis.com/maps/api/distancematrix/json?origins=G6C1P9!destinations=G6V6Y9!mode=walking!language=fr-CA!sensor=false
                     </article>                        
                     </section>-->
+                    
                     <f:view>
-                            <h:form id="form">
-                                <m:map zoom="#{c.zoom}"  width="100%" height="90vh" longitude="#{c.GPSlon}" latitude="#{c.GPSlat}" showDefaultControls="false" binding="#{c.map}" >
-                                    </m:map>
-                            </h:form>
+                        <h:form id="form">
+                            <m:map zoom="#{c.zoom}"  width="100%" height="90vh" longitude="#{c.GPSlon}" latitude="#{c.GPSlat}" showDefaultControls="false">
+                                <m:marker id="centerMarker"><m:icon imageURL="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"/></m:marker>
+                                <c:if test="#{!empty c.mapMembre}">
+                                    <ui:repeat value="#{c.mapMembre}" var="membre">
+                                        <m:marker id="membre${membre.id}" latitude="${membre.lat}" longitude="${membre.lon}">
+                                            <m:htmlInformationWindow htmlText="${membre.pseudo}"/>
+                                            <m:icon imageURL="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"/>
+                                        </m:marker>
+                                    </ui:repeat>
+                                </c:if>
+                            </m:map>
+                        </h:form>
                     </f:view>
     		</ui:define>
     	</ui:composition>

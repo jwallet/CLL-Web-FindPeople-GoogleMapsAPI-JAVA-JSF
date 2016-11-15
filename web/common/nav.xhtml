@@ -20,10 +20,9 @@
                             <a href="#!" class="brand-logo center"><img src='resources/images/qb.png' height='56' width='auto'/></a>   
                             <a href="#" data-activates="dropDownMenu" class="button-collapse"><i class="material-icons">menu</i></a>
                             
-                                <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
-                                    <c:if test="#{!empty c.tempCodePostal || c.connecterStatus}"><li><h:commandLink action="#{c.LocateGeoMe()}"><i class="large material-icons">my_location</i></h:commandLink></li></c:if>
-                                        <c:if test="#{c.connecterStatus}"><li><h:commandLink action="compte.xhtml"><i class="large material-icons">person</i></h:commandLink></li></c:if>
-                                </ul>
+                            <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
+                                <c:if test="#{c.connecterStatus}"><li><h:commandLink action="compte.xhtml"><i class="large material-icons">person</i></h:commandLink></li></c:if>
+                            </ul>
                             
                             <ul class="hide-on-med-and-down">
                                 <li><a href="#!">one</a></li>

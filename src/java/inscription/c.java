@@ -11,8 +11,10 @@ import com.googlecode.gmaps4jsf.component.eventlistener.EventListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.net.URLConnection;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -21,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -28,7 +31,7 @@ import org.json.JSONObject;
 
 @ManagedBean
 @SessionScoped
-public class c {
+public class c implements Serializable{
     
     private String userEmail = "";
     private String userCodePostal = "";
@@ -44,7 +47,12 @@ public class c {
     String userGPSlon = "-71.2044023";
     private String visitorCodePostal = "";
     
-    private Map map;
+//    private ArrayList mapMembreId;
+//    private ArrayList mapMembrePseudo;
+//    private ArrayList mapMembreGPSlat;
+//    private ArrayList mapMembreGPSlon;
+    
+    private List<markerMembre> mapMembre;
     
     private int dbIdCompte = 0;
     private String dbEmail = "";
@@ -63,12 +71,12 @@ public class c {
     private String dbPseudo = "";
     
     private boolean connecter_succes = false;
-    /**
-     * Creates a new instance of i
-     */
+
     public c() 
     {
+        
     }
+    
     public Connection getConnexion()throws ClassNotFoundException, SQLException
     {      
         Connection con = null;
@@ -84,10 +92,21 @@ public class c {
             System.out.println(ex.getMessage());
         }
         finally{
-        }
-        
-        return con;
-        
+        }        
+        return con;        
+    }
+    
+    public String setDeconnexion()
+    {
+        userEmail = "";
+        userCodePostal = "";
+        userPasse = "";
+        userZoom = "12";
+        visitorCodePostal = "";
+        userGPSlon = "-71.2044023";
+        userGPSlat = "46.8129233";
+        connecter_succes=false;
+        return "index.xhtml";
     }
     
     public String getDbEmail()
@@ -102,19 +121,6 @@ public class c {
     public boolean getConnecterStatus()
     {
         return connecter_succes;
-    }
-    
-    public String setDeconnexion()
-    {
-        userEmail = "";
-        userCodePostal = "";
-        userPasse = "";
-        userZoom = "12";
-        visitorCodePostal = "";
-        userGPSlon = "-71.2044023";
-        userGPSlat = "46.8129233";
-        connecter_succes=false;
-        return "index.xhtml";
     }
     
     public String getOublier()
@@ -171,52 +177,24 @@ public class c {
         return userGPSlon;
     }
     
-    public Map getMap(){
-        return map;
+    public List<markerMembre> getMapMembre(){
+        return mapMembre;
     }
-    
-    public void setMap(Map map) throws ClassNotFoundException, SQLException{
-        //to set markers on map
-        //http://biemond.blogspot.ca/2008/09/google-maps-for-jsf-gmaps4jsf-in.html
-        this.map = map;  
-        map.setLatitude(userGPSlat);  
-        map.setLongitude(userGPSlon); 
-  
-        ResultSet rs;
-        PreparedStatement pst;
-        Connection con = this.getConnexion();
-        
-        String stm = "select idCompte, gpslat, gpslon, pseudo from compte";
-      
-        try
-        {
-            pst = con.prepareStatement(stm);
-            pst.executeQuery();
-            rs = pst.getResultSet();
-            while(rs.next()){
-                dbIdCompte = rs.getInt(1);
-                dbGPSlat = rs.getString(5);
-                dbGPSlon = rs.getString(6);
-                dbPseudo = rs.getString(15);
-                //note: ici je peux calculer si on ajoute un mark pour le membre si la distance gpsLON - usergpsLON est a l'interieur de 5 km.
-                //mark member on map
-                Marker mark = new Marker();  
-                mark.setLatitude(dbGPSlat);  
-                mark.setLongitude(dbGPSlon);  
-                mark.setJsVariable("memberMark"+dbIdCompte+"js");  
-                mark.setId("memberMark"+dbIdCompte);  
-                EventListener event = new EventListener();  
-                event.setEventName("clickMemberMark"+dbIdCompte);  
-                event.setJsFunction("clickHandlerMemberMark"+dbIdCompte+"js");  
-                mark.getChildren().add(event);  
-                map.getChildren().add(mark);  
-            }
-        }
-        catch (SQLException ex){
-            System.out.println("in exec");
-            System.out.println(ex.getMessage());
-        }
-    }
+//    public ArrayList getMapMembreId(){
+//        return mapMembreId;
+//    }
+//    
+//    public ArrayList getMapMembrePseudo(){
+//        return mapMembrePseudo;
+//    }
+//    
+//    public ArrayList getMapMembreGPSlat(){
+//        return mapMembreGPSlat;
+//    }
+//    
+//    public ArrayList getMapMembreGPSlon(){
+//        return mapMembreGPSlon;
+//    }
     
     public String getNewEmail()
     {
@@ -265,7 +243,7 @@ public class c {
         boolean passeMatches = userNewPasse1.equals(userNewPasse2);
         boolean codePostalValide = userNewCodePostal.matches("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z][0-9][A-Z][0-9]$");
 
-        LocateGeoMe();
+        GetLocalisation(userNewCodePostal);
         
         if(passeMatches) //&& codePostalValide)
         {
@@ -275,7 +253,6 @@ public class c {
                 Connection connectionToBD = this.getConnexion();
 
                 String statementSQL = "INSERT INTO compte(email,cpostal,passe,gpslat,gpslon) VALUES(?,?,?,?,?)"; //insert
-
             
                 prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
                 prepareStatementSQLFormat.setString(1, userNewEmail);
@@ -303,51 +280,6 @@ public class c {
         }       
     }     
     
-    private JSONObject GoogleApiToJson(String CodePostal) throws JSONException, MalformedURLException, IOException
-    {       
-        String sUrl = "http://maps.googleapis.com/maps/api/geocode/json?address="+ CodePostal + "&sensor=false";
-        URL url = new URL(sUrl);
-        URLConnection webConnectionToGoogleAPIgeocode = url.openConnection();
-        BufferedReader inBuffer;
-        inBuffer = new BufferedReader(new InputStreamReader(webConnectionToGoogleAPIgeocode.getInputStream()));
-        String inputLine;           
-        String jsonResult="";
-        while ((inputLine = inBuffer.readLine()) != null){
-            jsonResult += inputLine;                
-        }
-        inBuffer.close();
-        JSONObject o = new JSONObject(jsonResult);      
-        return o;
-    }
-    
-    private boolean valideJSON(JSONObject o) throws JSONException{
-        String status="";
-        if(o.has("status")) status = o.getString("status");
-        return status.equals("OK");
-    }
-    public void LocateGeoMe()throws JSONException, MalformedURLException, IOException
-    {
-        String CodePostal = userCodePostal;
-        if (userCodePostal.isEmpty())
-        {
-            CodePostal = visitorCodePostal;
-        }
-        JSONObject obj = GoogleApiToJson(CodePostal);
-        boolean r = valideJSON(obj);
-        while(!r && CodePostal.length()>=3)
-        {
-            CodePostal = CodePostal.substring(0, CodePostal.length()-3);
-            obj = GoogleApiToJson(CodePostal);
-            r = valideJSON(obj);  
-        }
-        if(CodePostal.length()==6)
-            userZoom = "15";
-        else
-            userZoom = "12";
-        userGPSlat = Double.toString(obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
-        userGPSlon = Double.toString(obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
-    }
-   
     public void connect() throws ClassNotFoundException, SQLException
     {
         ResultSet rs;
@@ -398,7 +330,14 @@ public class c {
                 userGPSlon = dbGPSlon;  
             }
         }       
-
+        userZoom = "15";
+        con.close();
+        setMarkers();
+//        this.mapMembre = new ArrayList<markerMembre>();
+//         this.mapMembre.add( new markerMembre(
+//                    1, "pseudo", "11.1111","22.2222"));
+//         this.mapMembre.add( new markerMembre(
+//                    2, "pseudo2", "21.1111","32.2222"));
     }       
     
     public void updateDbLocation_ActuallyEmpty() throws ClassNotFoundException{
@@ -427,4 +366,146 @@ public class c {
                     System.out.println(ex.getMessage());
                 }
     }
+    
+    private JSONObject GoogleApiToJson(String CodePostal) throws JSONException, MalformedURLException, IOException
+    {       
+        String sUrl = "http://maps.googleapis.com/maps/api/geocode/json?address="+ CodePostal + "&sensor=false";
+        URL url = new URL(sUrl);
+        URLConnection webConnectionToGoogleAPIgeocode = url.openConnection();
+        BufferedReader inBuffer;
+        inBuffer = new BufferedReader(new InputStreamReader(webConnectionToGoogleAPIgeocode.getInputStream()));
+        String inputLine;           
+        String jsonResult="";
+        while ((inputLine = inBuffer.readLine()) != null){
+            jsonResult += inputLine;                
+        }
+        inBuffer.close();
+        JSONObject o = new JSONObject(jsonResult);      
+        return o;
+    }
+    
+    private boolean valideJSON(JSONObject o) throws JSONException{
+        String status="";
+        if(o.has("status")) status = o.getString("status");
+        return status.equals("OK");
+    }
+    
+    public void LocateGeoMe()throws JSONException, MalformedURLException, IOException
+    {
+        String CodePostal = userCodePostal;
+        if (userCodePostal.isEmpty())
+        {
+            CodePostal = visitorCodePostal;
+        }
+        GetLocalisation(CodePostal);
+    }
+    
+    private void GetLocalisation(String CodePostal) throws JSONException, MalformedURLException, IOException
+    {
+        JSONObject obj = GoogleApiToJson(CodePostal);
+        boolean r = valideJSON(obj);
+        while(!r && CodePostal.length()>=3)
+        {
+            CodePostal = CodePostal.substring(0, CodePostal.length()-3);
+            obj = GoogleApiToJson(CodePostal);
+            r = valideJSON(obj);  
+        }
+        if(CodePostal.length()==6)
+            userZoom = "15";
+        else
+            userZoom = "12";
+        userGPSlat = Double.toString(obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
+        userGPSlon = Double.toString(obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
+    }
+    
+    public void setMarkers() throws ClassNotFoundException, SQLException{
+        ResultSet rs;
+        PreparedStatement pst;
+        Connection con = this.getConnexion();
+        
+        String stm = "select * from compte";
+        this.mapMembre = new ArrayList<>();
+        try
+        {
+            pst = con.prepareStatement(stm);
+            pst.executeQuery();
+            rs = pst.getResultSet();
+            while(rs.next()){
+                this.mapMembre.add( new markerMembre(
+                    rs.getInt(1),
+                    rs.getString(15),
+                    rs.getString(5),
+                    rs.getString(6)
+                ));                
+                
+//                mapMembreId.add(dbIdCompte);
+//                mapMembrePseudo.add(dbPseudo);
+//                mapMembreGPSlat.add(dbGPSlat);
+//                mapMembreGPSlon.add(dbGPSlon);
+            }
+        }
+        catch (SQLException ex){
+            System.out.println("in exec");
+            System.out.println(ex.getMessage());
+        }
+    }
+//      public void setMap(Map map) throws ClassNotFoundException, SQLException{
+//        //to set markers on map
+//        //http://biemond.blogspot.ca/2008/09/google-maps-for-jsf-gmaps4jsf-in.html
+//        this.map = map;  
+//        map.setLatitude(userGPSlat);  
+//        map.setLongitude(userGPSlon); 
+//        
+//        Marker mark = new Marker();
+//        EventListener event = new EventListener();
+//                
+////        mark.setLatitude(userGPSlat);
+////        mark.setLongitude(userGPSlon);
+////        mark.setJsVariable("centerMarkjs");
+////        mark.setId("centerMark");
+////        event.setEventName("clickCenterMark");  
+////        event.setJsFunction("clickHandlerCenterMarkjs");  
+////        mark.getChildren().add(event);  
+////        map.getChildren().add(mark);  
+//        
+//        ResultSet rs;
+//        PreparedStatement pst;
+//        Connection con = this.getConnexion();
+//        
+//        String stm = "select idCompte, gpslat, gpslon, pseudo from compte";
+//      
+//        try
+//        {
+//            pst = con.prepareStatement(stm);
+//            pst.executeQuery();
+//            rs = pst.getResultSet();
+//            while(rs.next()){
+//                dbIdCompte = rs.getInt(1);
+//                dbGPSlat = rs.getString(5);
+//                dbGPSlon = rs.getString(6);
+//                dbPseudo = rs.getString(15);
+//                
+//                mapMembreId.add(dbIdCompte);
+//                mapMembrePseudo.add(dbPseudo);
+//                
+//                //note: ici je peux calculer si on ajoute un mark pour le membre 
+//                //si la distance gpsLON - usergpsLON est a l'interieur de 5 km.
+//                //mark member on map
+//                mark = new Marker();  
+//                mark.setLatitude(dbGPSlat);  
+//                mark.setLongitude(dbGPSlon);  
+//                mark.setJsVariable("memberMark"+dbIdCompte+"js");  
+//                mark.setId("memberMark"+dbIdCompte); 
+//                event = new EventListener();  
+//                event.setEventName("clickMemberMark"+dbIdCompte);  
+//                event.setJsFunction("clickHandlerMemberMark"+dbIdCompte+"js"); 
+//                mark.getChildren().add(event);  
+//                map.getChildren().add(mark);  
+//            }
+//        }
+//        catch (SQLException ex){
+//            System.out.println("in exec");
+//            System.out.println(ex.getMessage());
+//        }
+//    }
 }
