@@ -20,15 +20,15 @@
                             </h:form>
                         </div>
                     </c:if>
-                        #{c.email}
-                        #{c.passe}
-                        #{c.connecterStatus}
-                        #{c.dbEmail}
-                        #{c.dbPasse}
-                        #{c.codePostal}
-                        #{c.GPSlat}
-                        #{c.GPSlon}
-                        #{c.tempCodePostal}
+                        <!--#{c.email}-->
+                        <!--#{c.passe}-->
+                        <!--#{c.connecterStatus}-->
+                        <!--#{c.dbEmail}-->
+                        <!--#{c.dbPasse}-->
+                        <!--#{c.codePostal}-->
+                        <!--#{c.GPSlat}-->
+                        <!--#{c.GPSlon}-->
+                        <!--#{c.tempCodePostal}-->
                    </section>
                     <!--
                     <article>un site que vous devez vous inscrire votre code postal, la distance
@@ -49,16 +49,21 @@
                         connaitre la distance entre deux adresses et le traffic http://maps.googleapis.com/maps/api/distancematrix/json?origins=G6C1P9!destinations=G6V6Y9!mode=walking!language=fr-CA!sensor=false
                     </article>                        
                     </section>-->
-                    
                     <f:view>
                         <h:form id="form">
                             <m:map zoom="#{c.zoom}"  width="100%" height="90vh" longitude="#{c.GPSlon}" latitude="#{c.GPSlat}" showDefaultControls="false">
-                                <m:marker id="centerMarker"><m:icon imageURL="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"/></m:marker>
+
                                 <c:if test="#{!empty c.mapMembre}">
                                     <ui:repeat value="#{c.mapMembre}" var="membre">
                                         <m:marker id="membre${membre.id}" latitude="${membre.lat}" longitude="${membre.lon}">
-                                            <m:htmlInformationWindow htmlText="${membre.pseudo}"/>
-                                            <m:icon imageURL="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"/>
+                                                <c:choose>
+                                                    <c:when test="${empty membre.pseudo}">
+                                                        <m:htmlInformationWindow htmlText= "${c.setHtmlViewItem(membre.id)}" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <m:htmlInformationWindow htmlText= "${membre.pseudo}" />
+                                                    </c:otherwise>
+                                                </c:choose>
                                         </m:marker>
                                     </ui:repeat>
                                 </c:if>

@@ -13,23 +13,20 @@
     		<ui:define name="content">
                     <section class="container">
                         <h4>Mon compte</h4>
-                        <div class="carousel center" style="height:300px;">
-                            <h:form>
-                                <a class="carousel-item green-text" href="#one!"><i class="large material-icons green-text">notifications</i><p class="center">Notifications</p></a>
-                                <a class="carousel-item green-text" href="#two!"><i class="large material-icons green-text">today</i><p class="center">Disponibilités</p></a>
-                                <a class="carousel-item green-text" href="#three!"><i class="large material-icons green-text">pageview</i><p class="center">Rechercher</p></a>
-                                <a class="carousel-item green-text" href="#four!"><i class="large material-icons green-text">forum</i><p class="center">Chat</p></a>
-                                <a class="carousel-item green-text" href="#four!"><i class="large material-icons green-text">message</i><p class="center">Messagerie</p></a>
-                                <a class="carousel-item green-text" href="#four!"><i class="large material-icons green-text">mail</i><p class="center">Messages</p></a>
-                                <a class="carousel-item green-text" href="#five!"><i class="large material-icons green-text">favorite</i><p class="center">Favoris</p></a>
-                                <a class="carousel-item green-text" href="#one!"><i class="large material-icons green-text">person</i><p class="center">Profil</p></a>
-                                <a class="carousel-item green-text" href="#two!"><i class="large material-icons green-text">explore</i><p class="center">Explorer</p></a>
-                                <a class="carousel-item green-text" href="#three!"><i class="large material-icons green-text">group</i><p class="center">Groupes</p></a>
-                                <a class="carousel-item green-text" href="#four!"><i class="large material-icons green-text">vpn_key</i><p class="center">Modifier mot de passe</p></a>
-                                <a class="carousel-item green-text" href="#five!"><i class="large material-icons green-text">build</i><p class="center">Gérer</p></a>
-                                <a class="carousel-item green-text" href="#five!"><i class="large material-icons green-text">settings</i><p class="center">Options</p></a>
-                                <h:commandLink class="carousel-item green-text" action="#{c.setDeconnexion()}"><i class="large material-icons green-text">input</i><p class="center">Déconnexion</p></h:commandLink>
-                            </h:form>
+                        <div class="collection">
+                            <a class="collection-item green-text" href="#one!"><i class="medium left material-icons green-text">notifications</i><p style="font-size:140%;">Disponibilités</p></a>
+                                <a class="collection-item green-text" href="#three!"><i class="medium left material-icons green-text">pageview</i><p style="font-size:140%;">Rechercher</p></a>
+                                <a class="collection-item green-text" href="#four!"><i class="medium left material-icons green-text">forum</i><p style="font-size:140%;">Chat</p></a>
+                                <a class="collection-item green-text" href="#four!"><i class="medium left material-icons green-text">message</i><p style="font-size:140%;">Messagerie</p></a>
+                                <a class="collection-item green-text" href="#four!"><i class="medium left material-icons green-text">mail</i><p style="font-size:140%;">Messages<span class="new badge">4</span></p></a>
+                                <a class="collection-item green-text" href="#five!"><i class="medium left material-icons green-text">favorite</i><p style="font-size:140%;">Favoris<span class="badge">8</span></p></a>
+                                <a class="collection-item green-text" href="#one!"><i class="medium left material-icons green-text">person</i><p style="font-size:140%;">Profil</p></a>
+                                <a class="collection-item green-text" href="#two!"><i class="medium left material-icons green-text">explore</i><p style="font-size:140%;">Explorer</p></a>
+                                <a class="collection-item green-text" href="#three!"><i class="medium left material-icons green-text">group</i><p style="font-size:140%;">Groupes<span class="badge">11</span></p></a>
+                                <a class="collection-item green-text" href="#four!"><i class="medium left material-icons green-text">vpn_key</i><p style="font-size:140%;">Modifier mot de passe</p></a>
+                                <a class="collection-item green-text" href="#five!"><i class="medium left material-icons green-text">build</i><p style="font-size:140%;">Gérer</p></a>
+                                <a class="collection-item green-text" href="#five!"><i class="medium left material-icons green-text">settings</i><p style="font-size:140%;">Options</p></a>
+                                <a class="collection-item green-text" href="#{c.setDeconnexion()}"><i class="medium left material-icons green-text">input</i><p style="font-size:140%;">Déconnexion</p></a>
                         </div>
                     </section>
                     <script>$(document).ready(function(){

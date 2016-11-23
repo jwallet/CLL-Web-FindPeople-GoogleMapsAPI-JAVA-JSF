@@ -16,11 +16,13 @@ public class markerMembre implements Serializable{
     private String pseudo;
     private String lat;
     private String lon;
+    private String email;
     
-    public markerMembre(int id, String pseudo, String lat, String lon)
+    public markerMembre(int id, String pseudo, String email, String lat, String lon)
     {
         this.id = id;
         this.pseudo = pseudo;
+        this.email = email;
         this.lat = lat;
         this.lon = lon;
     }
@@ -30,6 +32,9 @@ public class markerMembre implements Serializable{
     }
     public String getPseudo(){
         return pseudo;
+    }
+    public String getEmail(){
+        return email;
     }
     public String getLat(){
         return lat;
@@ -43,6 +48,9 @@ public class markerMembre implements Serializable{
     }
     public void setPseudo(String pseudo){
         this.pseudo = pseudo;
+    }
+    public void setEmail (String email){
+        this.email = email;
     }
     public void setLat(String lat){
         this.lat = lat;

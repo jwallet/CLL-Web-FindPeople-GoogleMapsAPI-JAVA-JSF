@@ -72,9 +72,9 @@ public class c implements Serializable{
     
     private boolean connecter_succes = false;
 
-    public c() 
+    public c() throws ClassNotFoundException, SQLException 
     {
-        
+        setMarkers();
     }
     
     public Connection getConnexion()throws ClassNotFoundException, SQLException
@@ -180,21 +180,6 @@ public class c implements Serializable{
     public List<markerMembre> getMapMembre(){
         return mapMembre;
     }
-//    public ArrayList getMapMembreId(){
-//        return mapMembreId;
-//    }
-//    
-//    public ArrayList getMapMembrePseudo(){
-//        return mapMembrePseudo;
-//    }
-//    
-//    public ArrayList getMapMembreGPSlat(){
-//        return mapMembreGPSlat;
-//    }
-//    
-//    public ArrayList getMapMembreGPSlon(){
-//        return mapMembreGPSlon;
-//    }
     
     public String getNewEmail()
     {
@@ -261,6 +246,8 @@ public class c implements Serializable{
                 prepareStatementSQLFormat.setString(4, userGPSlat);
                 prepareStatementSQLFormat.setString(5, userGPSlon);
                 prepareStatementSQLFormat.executeUpdate(); 
+                
+                connectionToBD.close();
                 
             }
             catch (SQLException ex){
@@ -332,7 +319,7 @@ public class c implements Serializable{
         }       
         userZoom = "15";
         con.close();
-        setMarkers();
+        
 //        this.mapMembre = new ArrayList<markerMembre>();
 //         this.mapMembre.add( new markerMembre(
 //                    1, "pseudo", "11.1111","22.2222"));
@@ -359,6 +346,8 @@ public class c implements Serializable{
                     prepareStatementSQLFormat.setString(3, userEmail);
                     prepareStatementSQLFormat.setString(4, userPasse);
                     prepareStatementSQLFormat.executeUpdate(); 
+                    
+                    connectionToBD.close();
 
                 }
                 catch (SQLException ex){
@@ -434,6 +423,7 @@ public class c implements Serializable{
                 this.mapMembre.add( new markerMembre(
                     rs.getInt(1),
                     rs.getString(15),
+                    rs.getString(2),
                     rs.getString(5),
                     rs.getString(6)
                 ));                
@@ -448,6 +438,7 @@ public class c implements Serializable{
             System.out.println("in exec");
             System.out.println(ex.getMessage());
         }
+        con.close();
     }
 //      public void setMap(Map map) throws ClassNotFoundException, SQLException{
 //        //to set markers on map
@@ -508,4 +499,42 @@ public class c implements Serializable{
 //            System.out.println(ex.getMessage());
 //        }
 //    }
+    
+       public String setHtmlViewItem(String id)
+    {
+        String html;
+        html = "<div class=\"card\">" +
+"    <div class=\"card-image waves-effect waves-block waves-light\">" +
+"      <img class=\"activator\" width=\"260px\" height=\"200px\" src=\"";
+      //image
+        html+="\"></div>" +
+"    <div class=\"card-action\">" +
+"            <a class=\"activator left\" href=\"#\">Plus d'informations</a>" +
+//"            <a href=\"#\">Fiche complète</a>" +
+"            </div>" +
+"    <div class=\"card-reveal\">" +
+"      <span class=\"card-title grey-text text-darken-4\">Plus d'informations</span>" +
+"    <table class=\"table-info\">" +
+"    <tr><td><b>Ramassage:</b></td><td>";
+        //En personne
+        html+="</td></tr>" +  
+"    <tr><td><b>Adresse:</b></td><td>";
+        //G6C1P9
+       html+="</td></tr>" +
+"    <tr><td><b>Contact:</b></td><td>";
+       //Jose Ouellet
+       html+="</td></tr>" +
+"    <tr><td><b>Email:</b></td><td>";
+       //joseouellet@gmail.com
+       html+="</td></tr>" +
+"    <tr><td><b>Telephone:</b></td><td>";
+       //418-271-4722
+       html+="</td></tr>" + 
+"       <tr><td><a target=\"_blank\" href=\"";
+       //http://www.google.com/localisation
+       html+="\">Ouvrir dans Google Maps</a></td></tr>"+                            
+"    </table>" +
+"  </div>";
+        return html;
+    }
 }

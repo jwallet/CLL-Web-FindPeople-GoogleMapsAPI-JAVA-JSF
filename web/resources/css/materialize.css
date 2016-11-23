@@ -4475,7 +4475,9 @@ small {
 
 .card {
   position: relative;
-  margin: 0.5rem 0 1rem 0;
+  margin: 0;
+  padding-left:0px;
+  padding-top:0px;
   background-color: #fff;
   transition: box-shadow .25s;
   border-radius: 2px;
@@ -4593,7 +4595,7 @@ small {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 100%;
+  width: auto;
 }
 
 .card .card-image .card-title {
@@ -4601,11 +4603,12 @@ small {
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 20px;
+  padding: 0px;
 }
 
 .card .card-content {
-  padding: 20px;
+  padding: 10px;
+  color:#000;
   border-radius: 0 0 2px 2px;
 }
 
@@ -4615,21 +4618,22 @@ small {
 }
 
 .card .card-content .card-title {
-  line-height: 48px;
+  line-height: 24px;
 }
 
 .card .card-action {
   position: relative;
   background-color: inherit;
-  border-top: 1px solid rgba(160, 160, 160, 0.2);
-  padding: 20px;
+  padding-top: 0px;
+  padding-bottom:34px;
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
   color: #ffab40;
-  margin-right: 20px;
   transition: color .3s ease;
   text-transform: uppercase;
+  font-size:180%;
+  
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-floating):hover {
@@ -4637,7 +4641,7 @@ small {
 }
 
 .card .card-reveal {
-  padding: 20px;
+  padding: 0px;
   position: absolute;
   background-color: #fff;
   width: 100%;
@@ -6858,6 +6862,10 @@ input[type=range]:focus::-ms-fill-upper {
 /***************
     Nav List
 ***************/
+.table-info tr td{
+    padding:4px;
+    margin:0;
+}
 .table-of-contents.fixed {
   position: fixed;
 }
@@ -8537,4 +8545,9 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   .picker--time .picker__box {
     margin-bottom: 5em;
   }
+}
+
+.gm-style-iw{
+    width:100%;
+    left:0;
 }
