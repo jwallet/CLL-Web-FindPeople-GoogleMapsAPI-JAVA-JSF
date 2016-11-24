@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+        <ui:composition template="common/template.xhtml">
+            <ui:define name="title">Compte</ui:define>
+    		<ui:define name="content">
+                    <section class="container row">
+                        <div class="col s4" style='border-right: 2px dashed #ccc;'>
+                            <h4 style='margin-left:30px;'>Connexion</h4>
+                            <h:form class="col s12">
+                                <div class="col s12">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">email</i>
+                                        <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{c.email}'/>
+                                        <label for="icon_prefix">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col s12">
+                                    <div class="input-field col s12">   
+                                        <i class="material-icons prefix">lock</i>
+                                        <input type="password" id="ins_passe" class="validate" required='true' jsf:value='#{c.passe}'/>
+                                        <label for="icon_prefix">Mot de passe</label>
+                                    </div>                                  
+                                </div> 
+                                <!--<h:commandLink style="margin-left:50px;" action="#{c.oublier}" value="Mot de passe oublié? Envoyez-moi un email"/>-->
+                                <div class="modal-footer">
+                                    <h:commandButton action="#{c.connect()}" value="Se connecter" class="waves-effect waves-green btn-flat"/>
+                                </div>
+                            </h:form>
+                        </div>
+                        <div class="col s8">
+                            <h4 style='margin-left:30px;'>Inscription</h4>
+                            <h:form class="col s12">
+                                <div class="col s6">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">email</i>
+                                        <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{c.newEmail}'/>
+                                        <label for="icon_prefix">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">my_location</i>
+                                        <input type="text" id="ins_code_postal" class="validate" required='true' maxlength="6" jsf:value='#{c.newCPostal}'/>
+                                        <label for="icon_prefix">Code postal</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field col s12">   
+                                        <i class="material-icons prefix">lock</i>
+                                        <input type="password" id="ins_passe1" class="validate" required='true' jsf:value='#{c.newPasse1}'/>
+                                        <label for="icon_prefix">Mot de passe</label>
+                                    </div>  
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field col s12">          
+                                        <i class="material-icons prefix">lock</i>
+                                        <input type="password" id="ins_passe2" class="validate" required='true' jsf:value='#{c.newPasse2}'/>
+                                        <label for="icon_prefix">Mot de passe</label>
+                                    </div>
+                                </div>                        
+                                <div class="modal-footer">
+                                    <h:commandButton action="#{c.register()}" value="S'inscire" class="waves-effect waves-green btn-flat"/>
+                                </div>
+                            </h:form>
+                        </div>
+                    </section>
+                    <script>$(document).ready(function(){
+                    $('.carousel').carousel();
+                  });</script>
+                </ui:define>            
+        </ui:composition>
+</html>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+    <ui:composition>
+        <ui:define name="insconnect"></ui:define>
+        <!-- Modal Structure -->
+                <div id="modal-inscription" class="modal">
+                    <div class="modal-content">
+                        <h4>Inscription</h4>
+                        <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">email</i>
+                                    <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{c.newEmail}'/>
+                                    <label for="icon_prefix">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">my_location</i>
+                                    <input type="text" id="ins_code_postal" class="validate" required='true' maxlength="6" jsf:value='#{c.newCPostal}'/>
+                                    <label for="icon_prefix">Code postal</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">   
+                                    <i class="material-icons prefix">lock</i>
+                                    <input type="password" id="ins_passe1" class="validate" required='true' jsf:value='#{c.newPasse1}'/>
+                                    <label for="icon_prefix">Mot de passe</label>
+                                </div>  
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">          
+                                    <i class="material-icons prefix">lock</i>
+                                    <input type="password" id="ins_passe2" class="validate" required='true' jsf:value='#{c.newPasse2}'/>
+                                    <label for="icon_prefix">Mot de passe</label>
+                                </div>
+                            </div>                        
+                            <div class="modal-footer">
+                                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
+                                <h:commandButton action="#{c.register()}" value="S'inscire" class="waves-effect waves-green btn-flat"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div> 
+        <!-- Modal Structure -->
+                <div id="modal-connexion" class="modal">
+                    <div class="modal-content">
+                        <h4>Connexion</h4>
+                        <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">email</i>
+                                    <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{c.email}'/>
+                                    <label for="icon_prefix">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">   
+                                    <i class="material-icons prefix">lock</i>
+                                    <input type="password" id="ins_passe" class="validate" required='true' jsf:value='#{c.passe}'/>
+                                    <label for="icon_prefix">Mot de passe</label>
+                                </div>                                  
+                            </div> 
+                            <!--<h:commandLink style="margin-left:50px;" action="#{c.oublier}" value="Mot de passe oublié? Envoyez-moi un email"/>-->
+                            <div class="modal-footer">
+                                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
+                                <h:commandButton action="#{c.connect()}" value="Se connecter" class="waves-effect waves-green btn-flat"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div> 
+            <!-- Modal Structure -->
+                <div id="modal-localisation" class="modal">
+                    <div class="modal-content">
+                        <h4>Localisation de votre position</h4>
+                        <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">location_on</i>
+                                    <input type="text" id="icon_prefix" jsf:value="#{c.tempCodePostal}" class="validate" maxlength="6" required="true"/>
+                                    <label for="icon_prefix">Code postal</label>
+                                </div>
+                            </div>                        
+                            <div class="modal-footer">
+                                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Annuler</a>
+                                <h:commandButton action="#{c.LocateGeoMe()}" value="Enregistrer" class="waves-effect waves-green btn-flat"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div> 
+<!--            <div class="inline green hide-on-med-and-down">
+                <section class="container center">
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-connexion" data-activates="" style="margin: 5px;"><i class="material-icons left">lock</i>Connexion</a>  
+                    <a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-inscription" data-activates="" style="margin: 5px;"><i class="material-icons left">enhanced_encryption</i>Inscription</a>
+                    <c:if test="#{empty c.tempCodePostal}"><a class="waves-effect waves-light btn-large light-green accent-4" href="#modal-localisation" data-activates="" style="margin: 10px;"><i class="material-icons left">location_on</i>Localisation</a></c:if>
+                </section>
+            </div>-->
+            
+            <script type="text/javascript">
+            $( document ).ready(function(){
+                $('.modal').modal({
+                   dismissible: false               
+                });
+            });
+            </script>
+    </ui:composition>
+    </body>
+</html>
