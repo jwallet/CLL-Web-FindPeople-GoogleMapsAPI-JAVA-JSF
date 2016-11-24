@@ -9,7 +9,7 @@
     <body>
 	    <ui:composition>
                 <ul id="dropDownMenu" class="side-nav">
-                    <li><a href="#!">Annoncer un item à donner</a></li>
+                    <li><a href="publier.xhtml">Annoncer un item à donner</a></li>
                     <li><a href="#!">two</a></li>
                     <li><a href="#!">three</a></li>
                 </ul>                            
@@ -17,15 +17,20 @@
                     <nav class="grey">
                         <div class="nav-wrapper">
                             <h:form>
-                            <a href="#!" class="brand-logo center"><img src='resources/images/qb.png' height='56' width='auto'/></a>   
+                            <a href="index.xhtml" class="brand-logo center"><img src='resources/images/qb.png' height='56' width='auto'/></a>   
                             <a href="#" data-activates="dropDownMenu" class="button-collapse"><i class="material-icons">menu</i></a>
                             
                             <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
-                                <c:if test="#{c.connecterStatus}"><li><h:commandLink action="compte.xhtml"><i class="large material-icons">person</i></h:commandLink></li></c:if>
+                                <c:choose>
+                                <c:when test="#{!empty c.tempCodePostal || c.connecterStatus}"><c:if test="#{empty c.tempCodePostal}"><li><h:commandLink action="index.xhtml"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></h:commandLink></li></c:if></c:when>
+                                <c:otherwise test="#{empty c.tempCodePostal}"><c:if test="#{empty c.tempCodePostal}"><li><a href="#modal-localisation"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></a></li></c:if></c:otherwise>
+                                </c:choose>
+                                <c:if test="#{c.connecterStatus}"><li><h:commandLink action="compte.xhtml"><i class="large material-icons left">person</i><span class="hide-on-small-only">Compte</span></h:commandLink></li></c:if>
+                                <c:if test="#{!c.connecterStatus}"><li><h:commandLink action="connect.xhtml"><i class="large material-icons left">person</i><span class="hide-on-small-only">Se connecter</span></h:commandLink></li></c:if>
                             </ul>
-                            
+
                             <ul class="hide-on-med-and-down">
-                                <li><a href="#!">Annoncer un item à donner</a></li>                               
+                                <li><a href="publier.xhtml">Annoncer un item à donner</a></li>                               
                             </ul> 
                             </h:form>
                         </div>

@@ -52,7 +52,7 @@ public class c implements Serializable{
 //    private ArrayList mapMembreGPSlat;
 //    private ArrayList mapMembreGPSlon;
     
-    private List<markerMembre> mapMembre;
+    private List<markerItems> mapItems;
     
     private int dbIdCompte = 0;
     private String dbEmail = "";
@@ -177,8 +177,8 @@ public class c implements Serializable{
         return userGPSlon;
     }
     
-    public List<markerMembre> getMapMembre(){
-        return mapMembre;
+    public List<markerItems> getMapItems(){
+        return mapItems;
     }
     
     public String getNewEmail()
@@ -223,7 +223,7 @@ public class c implements Serializable{
         this.userNewPasse2 = p2;
     }
     
-    public void register() throws ClassNotFoundException, SQLException, JSONException, MalformedURLException, IOException
+    public String register() throws ClassNotFoundException, SQLException, JSONException, MalformedURLException, IOException
     {        
         boolean passeMatches = userNewPasse1.equals(userNewPasse2);
         boolean codePostalValide = userNewCodePostal.matches("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z][0-9][A-Z][0-9]$");
@@ -263,11 +263,12 @@ public class c implements Serializable{
             userNewPasse2 = "";
             userNewCodePostal = "";
             
-            connect();
-        }       
+            connect();          
+        }   
+        return "index";
     }     
     
-    public void connect() throws ClassNotFoundException, SQLException
+    public String connect() throws ClassNotFoundException, SQLException
     {
         ResultSet rs;
         PreparedStatement pst;
@@ -319,6 +320,7 @@ public class c implements Serializable{
         }       
         userZoom = "15";
         con.close();
+        return "index";
         
 //        this.mapMembre = new ArrayList<markerMembre>();
 //         this.mapMembre.add( new markerMembre(
@@ -412,26 +414,28 @@ public class c implements Serializable{
         PreparedStatement pst;
         Connection con = this.getConnexion();
         
-        String stm = "select * from compte";
-        this.mapMembre = new ArrayList<>();
+        String stm = "select * from compte join item on compte.idCompte=item.idCompte";
+        this.mapItems = new ArrayList<>();
         try
         {
             pst = con.prepareStatement(stm);
             pst.executeQuery();
             rs = pst.getResultSet();
             while(rs.next()){
-                this.mapMembre.add( new markerMembre(
-                    rs.getInt(1),
-                    rs.getString(15),
-                    rs.getString(2),
-                    rs.getString(5),
-                    rs.getString(6)
+                this.mapItems.add( new markerItems(
+                    rs.getInt(1),//idcompte                
+                    rs.getString(2),//email
+                    rs.getString(3),//cpostal
+                    rs.getString(5),//gsplat
+                    rs.getString(6),//gpslon
+                    rs.getString(7),//telephone
+                    rs.getString(8),//pseudo
+                    rs.getInt(9),//iditem
+                    rs.getInt(11),//ramassageType
+                    rs.getString(12),//imgURL
+                    rs.getDate(13),//date
+                    rs.getDate(14)//dateMax
                 ));                
-                
-//                mapMembreId.add(dbIdCompte);
-//                mapMembrePseudo.add(dbPseudo);
-//                mapMembreGPSlat.add(dbGPSlat);
-//                mapMembreGPSlon.add(dbGPSlon);
             }
         }
         catch (SQLException ex){
@@ -500,41 +504,79 @@ public class c implements Serializable{
 //        }
 //    }
     
-       public String setHtmlViewItem(String id)
+       public String setHtmlViewItem(int id)
     {
         String html;
+        markerItems item = new markerItems();
+        for(markerItems i : mapItems)
+        {
+            if(i.getIdItem()==id)
+                item = i;
+        } 
+        int expiration = (int)((item.getDateMax().getDay()-item.getDate().getDay()));
         html = "<div class=\"card\">" +
 "    <div class=\"card-image waves-effect waves-block waves-light\">" +
 "      <img class=\"activator\" width=\"260px\" height=\"200px\" src=\"";
-      //image
+        html += item.getImg();
         html+="\"></div>" +
 "    <div class=\"card-action\">" +
-"            <a class=\"activator left\" href=\"#\">Plus d'informations</a>" +
-//"            <a href=\"#\">Fiche complète</a>" +
+"            <a class=\"activator left\" href=\"#\">Informations sur l'annonce</a>" +
 "            </div>" +
 "    <div class=\"card-reveal\">" +
-"      <span class=\"card-title grey-text text-darken-4\">Plus d'informations</span>" +
-"    <table class=\"table-info\">" +
-"    <tr><td><b>Ramassage:</b></td><td>";
-        //En personne
-        html+="</td></tr>" +  
-"    <tr><td><b>Adresse:</b></td><td>";
-        //G6C1P9
-       html+="</td></tr>" +
-"    <tr><td><b>Contact:</b></td><td>";
-       //Jose Ouellet
-       html+="</td></tr>" +
-"    <tr><td><b>Email:</b></td><td>";
-       //joseouellet@gmail.com
-       html+="</td></tr>" +
-"    <tr><td><b>Telephone:</b></td><td>";
-       //418-271-4722
-       html+="</td></tr>" + 
-"       <tr><td><a target=\"_blank\" href=\"";
-       //http://www.google.com/localisation
-       html+="\">Ouvrir dans Google Maps</a></td></tr>"+                            
-"    </table>" +
-"  </div>";
+"      <span class=\"card-title grey-text text-darken-4\">Informations sur l'annonce</span>" +
+"    <table class=\"table-info\">";
+
+        html+="<tr><td><b>Date de parution:</b></td><td>";
+        html+= item.getDate().toString();
+        html+="</td></tr>";
+        if(item.getRamassage()==1||item.getRamassage()==2)
+        {
+            html+="<tr><td><b>Ramassage:</b></td><td>";
+            if(item.getRamassage()==1)
+            {
+                html+= "En personne";
+            }
+            else
+            {
+                html+= "Au bord de la rue";
+            }
+            html+="</td></tr>";
+        }        
+        html+="<tr><td><b>Code postal:</b></td><td>";
+        html+= item.getCpostal();
+       html+="</td></tr>";
+       if(item.getPseudo()!=null)
+       {
+            html+="<tr><td><b>Contact:</b></td><td>";
+           html+= item.getPseudo();
+           html+="</td></tr>";
+       }
+       if(item.getEmail()!=null)
+       {
+            html+="<tr><td><b>Email:</b></td><td>";
+             html+= item.getEmail();
+            html+="</td></tr>";
+       }
+       if(item.getTel()!=null)
+       {
+            html+="<tr><td><b>Téléphone:</b></td><td>";
+           html+= item.getTel();
+           html+="</td></tr>";
+       }
+       html+="<tr><td><b>Expire dans:</b></td><td>";
+        html+= expiration+" jour(s) ("+item.getDateMax().toString()+")";
+        html+="</td></tr>";
+        
+        html+="<tr><td><a href=\"message.xhtml?id=";
+       html+= item.getIdCompte();
+       html+="\">Envoyez-y un message privé</a></td></tr>";
+       
+        html+="<tr><td><a target=\"_blank\" href=\"";
+       html+= "https://maps.google.com/maps/place/"+item.getCpostal().substring(0, 3)+"+"+item.getCpostal().substring(3,6);
+       html+="\">Ouvrir dans Google Maps</a></td></tr>";
+       
+        html+="</table></div>";
         return html;
+
     }
 }

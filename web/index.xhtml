@@ -13,13 +13,13 @@
             <ui:define name="title">Index</ui:define>
     		<ui:define name="content">
                    <section class="container">
-                       <c:if test="#{!empty c.tempCodePostal || c.connecterStatus}">
+
                         <div class="fixed-action-btn">
                             <h:form>
-                                <h:commandLink class="btn-floating btn-large waves-effect waves-light yellow darken-4" action="index.xhtml"><i class="large material-icons">my_location</i></h:commandLink>
+                                <h:commandLink class="btn-floating btn-large waves-effect waves-light yellow darken-4" action="publier.xhtml"><i class="large material-icons">add</i></h:commandLink>
                             </h:form>
                         </div>
-                    </c:if>
+
                         <!--#{c.email}-->
                         <!--#{c.passe}-->
                         <!--#{c.connecterStatus}-->
@@ -52,18 +52,10 @@
                     <f:view>
                         <h:form id="form">
                             <m:map zoom="#{c.zoom}"  width="100%" height="90vh" longitude="#{c.GPSlon}" latitude="#{c.GPSlat}" showDefaultControls="false">
-
-                                <c:if test="#{!empty c.mapMembre}">
-                                    <ui:repeat value="#{c.mapMembre}" var="membre">
-                                        <m:marker id="membre${membre.id}" latitude="${membre.lat}" longitude="${membre.lon}">
-                                                <c:choose>
-                                                    <c:when test="${empty membre.pseudo}">
-                                                        <m:htmlInformationWindow htmlText= "${c.setHtmlViewItem(membre.id)}" />
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <m:htmlInformationWindow htmlText= "${membre.pseudo}" />
-                                                    </c:otherwise>
-                                                </c:choose>
+                                <c:if test="#{!empty c.mapItems}">
+                                    <ui:repeat value="#{c.mapItems}" var="i">
+                                        <m:marker id="item${i.idItem}" latitude="${i.lat}" longitude="${i.lon}">
+                                            <m:htmlInformationWindow htmlText= "${c.setHtmlViewItem(i.idItem)}" />
                                         </m:marker>
                                     </ui:repeat>
                                 </c:if>
