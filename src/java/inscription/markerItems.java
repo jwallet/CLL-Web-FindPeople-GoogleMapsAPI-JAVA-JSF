@@ -25,13 +25,14 @@ public class markerItems implements Serializable{
     private String img;
     private Date date;
     private Date dateMax;
+    private String dispos;
     public markerItems()
     {
         
     }
     public markerItems(int idCompte, String email, String cpostal, 
             String lat, String lon, String tel, String pseudo, 
-            int idItem, int ramassage, String img, Date date, Date dateMax)
+            int idItem, int ramassage, String img, Date date, Date dateMax, String disp)
     {
         this.idCompte = idCompte;
         this.email = email;
@@ -45,6 +46,7 @@ public class markerItems implements Serializable{
         this.img = img;
         this.date = date;
         this.dateMax = dateMax;
+        this.dispos = disp;
     }
     
     public int getIdCompte(){
@@ -84,7 +86,9 @@ public class markerItems implements Serializable{
     public Date getDateMax(){
         return dateMax;
     }
-
+    public String getDispos(){
+        return dispos;
+    }
     
     
     public void setId(int idCompte){
@@ -123,6 +127,10 @@ public class markerItems implements Serializable{
     }
     public void setDateMax(Date dateMax){
         this.dateMax = dateMax;
+    }
+    public void setDispos(String disp)
+    {
+        this.dispos = disp;
     }
     
 }

@@ -9,6 +9,7 @@ import com.googlecode.gmaps4jsf.component.map.Map;
 import com.googlecode.gmaps4jsf.component.marker.Marker;
 import com.googlecode.gmaps4jsf.component.eventlistener.EventListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -23,11 +24,20 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Date;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.apache.commons.fileupload.*;
+import org.apache.commons.fileupload.disk.*;
+import org.apache.commons.fileupload.servlet.*;
+import org.apache.commons.io.*;
 
 @ManagedBean
 @SessionScoped
@@ -41,10 +51,18 @@ public class c implements Serializable{
     private String userNewCodePostal = "";
     private String userNewPasse1 = "";
     private String userNewPasse2 = "";
-
+    
+    private String userTelephone = "";
+    private String userPseudo = "";
+    
+    private String itemImgURL = "";
+    private String itemDateMax = "";
+    private String itemRamassage = "";
+    private String itemDispos = "";
+            
     private String userZoom = "12";
-    String userGPSlat = "46.8129233";
-    String userGPSlon = "-71.2044023";
+    private String userGPSlat = "46.8129233";
+    private String userGPSlon = "-71.2044023";
     private String visitorCodePostal = "";
     
 //    private ArrayList mapMembreId;
@@ -53,6 +71,7 @@ public class c implements Serializable{
 //    private ArrayList mapMembreGPSlon;
     
     private List<markerItems> mapItems;
+    private List<items> items;
     
     private int dbIdCompte = 0;
     private String dbEmail = "";
@@ -60,14 +79,7 @@ public class c implements Serializable{
     private String dbPasse = "";
     private String dbGPSlat = "";
     private String dbGPSlon = "";
-    private int dbNoRue = 0;
-    private String dbNomRue = "";
-    private String dbVoisinage = "";
-    private String dbVille = "";
-    private String dbProvince = "";
-    private String dbPays = "";
-    private int dbTelephone = 0;
-    private int dbCellulaire = 0;
+    private String dbTelephone = "";
     private String dbPseudo = "";
     
     private boolean connecter_succes = false;
@@ -105,10 +117,43 @@ public class c implements Serializable{
         visitorCodePostal = "";
         userGPSlon = "-71.2044023";
         userGPSlat = "46.8129233";
+        userTelephone = "";
         connecter_succes=false;
         return "index.xhtml";
     }
-    
+
+    public String getItemImgURL()
+    {
+        return itemImgURL;
+    }
+    public String getItemDateMax()
+    {
+        return itemDateMax;
+    }
+    public String getItemRamassage()
+    {
+        return itemRamassage;
+    }
+    public String getItemDispos()
+    {
+        return itemDispos;
+    }
+    public void setItemImgURL(String e)
+    {
+        this.itemImgURL = e;
+    }
+    public void setItemDateMax(String e)
+    {
+        this.itemDateMax = e;
+    }
+    public void setItemRamassage(String e)
+    {
+        this.itemRamassage = e;
+    }
+    public void setItemDispos(String e)
+    {
+        this.itemDispos = e;
+    }
     public String getDbEmail()
     {
         return dbEmail;
@@ -129,6 +174,15 @@ public class c implements Serializable{
         return page;
     }
     
+    public String getTelephone()
+    {
+        return userTelephone;
+    }
+    
+        public void setTelephone(String e)
+    {
+        this.userTelephone = e;
+    }    
     
     public String getEmail()
     {
@@ -179,6 +233,10 @@ public class c implements Serializable{
     
     public List<markerItems> getMapItems(){
         return mapItems;
+    }
+    
+    public List<items> getItems(){
+        return items;
     }
     
     public String getNewEmail()
@@ -274,7 +332,7 @@ public class c implements Serializable{
         PreparedStatement pst;
         Connection con = this.getConnexion();
         
-        String stm = "select * from compte where email=? and passe=?";
+        String stm = "select * from compte where compte.email=? and compte.passe=?";
       
         try
         {
@@ -284,32 +342,30 @@ public class c implements Serializable{
             pst.executeQuery();
             rs = pst.getResultSet();
             while(rs.next()){
-                dbIdCompte = rs.getInt(1);
-                dbEmail = rs.getString(2);
-                dbCodePostal = rs.getString(3);
+                dbIdCompte = rs.getInt(1);//idcompte                
+                dbEmail = rs.getString(2);//email
+                dbCodePostal = rs.getString(3);//cpostal
                 dbPasse = rs.getString(4);
-                dbGPSlat = rs.getString(5);
-                dbGPSlon = rs.getString(6);
-                dbNoRue = rs.getInt(7);
-                dbNomRue = rs.getString(8);
-                dbVoisinage = rs.getString(9);
-                dbVille = rs.getString(10);
-                dbProvince = rs.getString(11);
-                dbPays = rs.getString(12);
-                dbTelephone = rs.getInt(13);
-                dbCellulaire = rs.getInt(14);
-                dbPseudo = rs.getString(15);
+                dbGPSlat = rs.getString(5);//gsplat
+                dbGPSlon = rs.getString(6);//gpslon
+                dbTelephone = rs.getString(7);//telephone
+                dbPseudo = rs.getString(8);//pseudo
             }
         }
         catch (SQLException ex){
             System.out.println("in exec");
             System.out.println(ex.getMessage());
         }
-        
+        con.close();
         connecter_succes = dbEmail.equals(userEmail) && dbPasse.equals(userPasse);
         if(connecter_succes){
+            setItemsFromAccount();
+            userTelephone = dbTelephone;
             userCodePostal = dbCodePostal;
             userPasse = dbPasse;
+            userPseudo = dbPseudo;
+            //itemIdItem = dbIdItem;
+            
             if(dbGPSlon.isEmpty() || dbGPSlat.isEmpty()){
                 updateDbLocation_ActuallyEmpty();
             }
@@ -328,6 +384,36 @@ public class c implements Serializable{
 //         this.mapMembre.add( new markerMembre(
 //                    2, "pseudo2", "21.1111","32.2222"));
     }       
+    
+    public void setItemsFromAccount() throws ClassNotFoundException, SQLException{
+        ResultSet rs;
+        PreparedStatement pst;
+        Connection con = this.getConnexion();
+        String stm = "select * from item where idCompte=?";
+        this.items = new ArrayList<>();
+            try
+            {
+                pst = con.prepareStatement(stm);
+                pst.setInt(1, dbIdCompte);
+                pst.executeQuery();
+                rs = pst.getResultSet();
+                while(rs.next()){
+                    this.items.add( new items(
+                        rs.getInt(1),//iditem
+                        dbIdCompte,
+                        rs.getString(3),//ramassageType
+                        rs.getString(4),//imgURL
+                        new Date(rs.getDate(5).getDate()),//date
+                        new Date(rs.getDate(6).getDate()),//dateMax
+                        rs.getString(7)//dispos
+                    ));
+                }
+            }
+            catch (SQLException ex){
+                System.out.println("in exec");
+                System.out.println(ex.getMessage());
+            }
+    }
     
     public void updateDbLocation_ActuallyEmpty() throws ClassNotFoundException{
         try {
@@ -409,6 +495,38 @@ public class c implements Serializable{
         userGPSlon = Double.toString(obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
     }
     
+    public String Publier() throws ClassNotFoundException, ParseException
+    {
+        try
+            {
+                PreparedStatement prepareStatementSQLFormat;
+                Date dNow = new Date();
+                String strFormatDateMax = itemDateMax.replaceAll(" ,", "");
+                SimpleDateFormat SdFormatMax = new SimpleDateFormat("ddMMMMyyyy");
+                Date dateFormatDateMax = SdFormatMax.parse(strFormatDateMax);
+                Connection connectionToBD = this.getConnexion();
+
+                String statementSQL = "INSERT INTO item(idCompte,ramassage,img,date,datemax) VALUES(?,?,?,?,?)"; //insert
+            
+                prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
+                prepareStatementSQLFormat.setInt(1, dbIdCompte);
+                prepareStatementSQLFormat.setString(2, itemRamassage);           
+                prepareStatementSQLFormat.setString(3, itemImgURL);
+                prepareStatementSQLFormat.setDate(4, new java.sql.Date(dNow.getYear(),dNow.getMonth(),dNow.getDay()));
+                prepareStatementSQLFormat.setDate(5, new java.sql.Date(dateFormatDateMax.getTime()));
+                prepareStatementSQLFormat.setString(6, itemDispos);
+                prepareStatementSQLFormat.executeUpdate(); 
+                
+                connectionToBD.close();
+                
+            }
+            catch (SQLException ex){
+                System.out.println("in exec");
+                System.out.println(ex.getMessage());
+            }
+        return "index.xhtml";
+    }
+    
     public void setMarkers() throws ClassNotFoundException, SQLException{
         ResultSet rs;
         PreparedStatement pst;
@@ -434,7 +552,8 @@ public class c implements Serializable{
                     rs.getInt(11),//ramassageType
                     rs.getString(12),//imgURL
                     rs.getDate(13),//date
-                    rs.getDate(14)//dateMax
+                    rs.getDate(14),//dateMax
+                    rs.getString(15)//dispos
                 ));                
             }
         }
@@ -507,16 +626,17 @@ public class c implements Serializable{
        public String setHtmlViewItem(int id)
     {
         String html;
+        Date d = new Date();
         markerItems item = new markerItems();
         for(markerItems i : mapItems)
         {
             if(i.getIdItem()==id)
                 item = i;
         } 
-        int expiration = (int)((item.getDateMax().getDay()-item.getDate().getDay()));
+        int expiration = (int)((item.getDate().getDate() - d.getDate()));
         html = "<div class=\"card\">" +
 "    <div class=\"card-image waves-effect waves-block waves-light\">" +
-"      <img class=\"activator\" width=\"260px\" height=\"200px\" src=\"";
+"      <img class=\"activator\" width=\"240px\" height=\"210px\" src=\"";
         html += item.getImg();
         html+="\"></div>" +
 "    <div class=\"card-action\">" +
@@ -560,16 +680,22 @@ public class c implements Serializable{
        if(item.getTel()!=null)
        {
             html+="<tr><td><b>Téléphone:</b></td><td>";
-           html+= item.getTel();
+            long tel= Long.parseLong(item.getTel());
+           html+= String.valueOf(tel).replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
            html+="</td></tr>";
        }
        html+="<tr><td><b>Expire dans:</b></td><td>";
         html+= expiration+" jour(s) ("+item.getDateMax().toString()+")";
         html+="</td></tr>";
         
-        html+="<tr><td><a href=\"message.xhtml?id=";
-       html+= item.getIdCompte();
-       html+="\">Envoyez-y un message privé</a></td></tr>";
+//        html+="<tr><td><a href=\"message.xhtml?id=";
+//       html+= item.getIdCompte();
+//       html+="\">Envoyez-y un message privé</a></td></tr>";
+
+        html+="<tr><td><a href=\"mailto:";
+       html+= item.getEmail();
+       html+="\">Envoyez-y un courriel</a></td></tr>";
+
        
         html+="<tr><td><a target=\"_blank\" href=\"";
        html+= "https://maps.google.com/maps/place/"+item.getCpostal().substring(0, 3)+"+"+item.getCpostal().substring(3,6);

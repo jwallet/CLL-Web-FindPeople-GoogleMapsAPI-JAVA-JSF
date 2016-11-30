@@ -8,15 +8,16 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <body>
 	    <ui:composition>
+                <h:form>
                 <ul id="dropDownMenu" class="side-nav">
-                    <li><a href="publier.xhtml">Annoncer un item à donner</a></li>
+                     <li><h:commandLink action="publier.xhtml">Annoncer un item à donner</h:commandLink></li>
                     <li><a href="#!">two</a></li>
                     <li><a href="#!">three</a></li>
                 </ul>                            
                 <div class="navbar-fixed">
                     <nav class="grey">
                         <div class="nav-wrapper">
-                            <h:form>
+                            
                             <a href="index.xhtml" class="brand-logo center"><img src='resources/images/qb.png' height='56' width='auto'/></a>   
                             <a href="#" data-activates="dropDownMenu" class="button-collapse"><i class="material-icons">menu</i></a>
                             
@@ -30,13 +31,14 @@
                             </ul>
 
                             <ul class="hide-on-med-and-down">
-                                <li><a href="publier.xhtml">Annoncer un item à donner</a></li>                               
+                                <li><h:commandLink action="publier.xhtml">Annoncer un item à donner</h:commandLink></li>                               
                             </ul> 
-                            </h:form>
+                            
                         </div>
                         
                     </nav>
                 </div>
+                </h:form>
                 <script type="text/javascript">
                 $( document ).ready(function(){
                     $(".button-collapse").sideNav();
