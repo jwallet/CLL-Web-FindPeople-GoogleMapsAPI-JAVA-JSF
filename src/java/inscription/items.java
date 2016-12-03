@@ -15,7 +15,7 @@ import java.util.Date;
 public class items implements Serializable{
     private int idItem;
     private int idCompte;
-    private String ramassage;
+    private int ramassage;
     private String img;
     private Date date;
     private Date dateMax;
@@ -24,7 +24,7 @@ public class items implements Serializable{
     {
         
     }
-    public items(int idItem, int idCompte, String ramassage, String img, Date date, Date dateMax, String disp)
+    public items(int idItem, int idCompte, int ramassage, String img, Date date, Date dateMax, String disp)
     {
         this.idItem = idItem;
         this.idCompte = idCompte;
@@ -42,7 +42,7 @@ public class items implements Serializable{
     public int getIdItem(){
         return idItem;
     }
-    public String getRamassage()
+    public int getRamassage()
     {
         return ramassage;
     }
@@ -67,7 +67,7 @@ public class items implements Serializable{
     public void setIdItem(int idItem){
         this.idItem = idItem;
     }
-    public void setRamassage(String ram)
+    public void setRamassage(int ram)
     {
         this.ramassage = ram;
     }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+        <ui:composition template="common/template.xhtml">
+            <ui:define name="title">Gerer</ui:define>
+    		<ui:define name="content">
+                    <section class="container">
+                        <div class="col s12">
+                            <h4>Liste des publications du site</h4>
+                            <br/>                                
+                            <div class='col s12'>
+                                <c:if test="#{!empty c.mapItems}">
+                                    
+                                    <c:forEach items="#{c.mapItems}" var="i">
+                                        <div style="
+                                             display:inline-block;
+                                             width:400px;height:440px;
+                                             background-color:#eee;
+                                             padding:6px;
+                                             border:4px solid #444;
+                                             background-image:url('#{i.img}');
+                                             background-size: auto 300px;
+                                             background-position: bottom;
+                                             background-repeat: no-repeat;
+                                             ">
+                                            Date de publication: #{i.date.date} / #{i.date.month+1} / #{i.date.year+1900}  
+                                            <a style="width:130px;text-align:center;" class="btn right" href="#{c.loadModif2(i.idItem)}">Modifier</a><br/>
+                                            Date de retrait: #{i.dateMax.date} / #{i.dateMax.month+1} / #{i.dateMax.year+1900} 
+                                            <a href="#{c.loadDelete2(i.idItem)}" style="width:130px;text-align:center;" class="btn right">Retirer</a><br />
+                                            Délai restant: #{(c.dateNowDate.day - i.dateMax.day)+((i.getDateMax().getMonth() - c.dateNowDate.getMonth())*30)+((i.getDateMax().getYear()-c.dateNowDate.getYear())*365)} jours<br/>
+                                            Contact: #{i.email}<br/>
+                                            Code postal: #{i.cpostal}
+                                        </div>
+                                    </c:forEach>
+                                    
+                                </c:if>
+                            </div>
+                        </div>
+                        <br/>
+                    </section>
+                </ui:define>            
+        </ui:composition>
+</html>

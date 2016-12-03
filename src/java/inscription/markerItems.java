@@ -19,7 +19,7 @@ public class markerItems implements Serializable{
     private String lat;
     private String lon;
     private String tel;
-    private String pseudo;
+    private boolean isAdmin;
     private int idItem;
     private int ramassage;
     private String img;
@@ -31,7 +31,7 @@ public class markerItems implements Serializable{
         
     }
     public markerItems(int idCompte, String email, String cpostal, 
-            String lat, String lon, String tel, String pseudo, 
+            String lat, String lon, String tel, boolean isAdmin, 
             int idItem, int ramassage, String img, Date date, Date dateMax, String disp)
     {
         this.idCompte = idCompte;
@@ -40,7 +40,7 @@ public class markerItems implements Serializable{
         this.lat = lat;
         this.lon = lon;
         this.tel = tel;
-        this.pseudo = pseudo;
+        this.isAdmin = isAdmin;
         this.idItem = idItem;
         this.ramassage = ramassage;
         this.img = img;
@@ -67,8 +67,8 @@ public class markerItems implements Serializable{
     public String getTel(){
         return tel;
     }
-    public String getPseudo(){
-        return pseudo;
+    public boolean getIsAdmin(){
+        return isAdmin;
     }
     public int getIdItem(){
         return idItem;
@@ -109,8 +109,8 @@ public class markerItems implements Serializable{
     public void setTel(String tel){
         this.tel = tel;
     }
-    public void setPseudo(String pseudo){
-        this.pseudo = pseudo;
+    public void setIsAdmin(boolean isAdmin){
+        this.isAdmin = isAdmin;
     }
     public void setIdItem(int idItem){
         this.idItem = idItem;
@@ -131,6 +131,5 @@ public class markerItems implements Serializable{
     public void setDispos(String disp)
     {
         this.dispos = disp;
-    }
-    
+    }    
 }

@@ -93,7 +93,7 @@ and open the template in the editor.
                             <div class="col">
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">location_on</i>
-                                    <input type="text" id="icon_prefix" jsf:value="#{c.tempCodePostal}" class="validate" maxlength="6" required="true"/>
+                                    <input type="text" id="icon_prefix" jsf:value="#{c.tempCodePostal}" class="validate" pattern="[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]"  required="true"/>
                                     <label for="icon_prefix">Code postal</label>
                                 </div>
                             </div>                        

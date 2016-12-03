@@ -9,7 +9,6 @@ import com.googlecode.gmaps4jsf.component.map.Map;
 import com.googlecode.gmaps4jsf.component.marker.Marker;
 import com.googlecode.gmaps4jsf.component.eventlistener.EventListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -30,18 +29,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Date;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.commons.fileupload.*;
-import org.apache.commons.fileupload.disk.*;
-import org.apache.commons.fileupload.servlet.*;
-import org.apache.commons.io.*;
 
 @ManagedBean
 @SessionScoped
 public class c implements Serializable{
+    private int itemIdToDelete;
+    private int itemIdToEdit;
+    
     
     private String userEmail = "";
     private String userCodePostal = "";
@@ -53,12 +49,15 @@ public class c implements Serializable{
     private String userNewPasse2 = "";
     
     private String userTelephone = "";
-    private String userPseudo = "";
+    private boolean userIsAdmin = false;
     
     private String itemImgURL = "";
     private String itemDateMax = "";
-    private String itemRamassage = "";
+    private int itemRamassage = 1;
     private String itemDispos = "";
+    
+    private String dateNow = "";
+    private Date dateNowDate = new Date();
             
     private String userZoom = "12";
     private String userGPSlat = "46.8129233";
@@ -80,12 +79,18 @@ public class c implements Serializable{
     private String dbGPSlat = "";
     private String dbGPSlon = "";
     private String dbTelephone = "";
-    private String dbPseudo = "";
+    private boolean dbIsAdmin = false;
     
     private boolean connecter_succes = false;
 
     public c() throws ClassNotFoundException, SQLException 
     {
+        SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+        Date dN = new Date();
+        itemDateMax = sdFormat.format(dN);
+        dateNow = sdFormat.format(dN);
+        setMarkers();
+        runDeleteOldItems();
         setMarkers();
     }
     
@@ -121,7 +126,49 @@ public class c implements Serializable{
         connecter_succes=false;
         return "index.xhtml";
     }
+   
 
+    public int getItemIdToDelete()
+    {
+        return itemIdToDelete;
+    }
+    public void setItemIdToDelete(int e)
+    {
+        this.itemIdToDelete = e;
+    }
+    
+    public Date getDateNowDate()
+    {
+        return dateNowDate;
+    }
+    public void setDateNowDate(Date e)
+    {
+        this.dateNowDate = e;
+    }
+    
+    public int getItemIdToEdit()
+    {
+        return itemIdToEdit;
+    }
+    public void setItemIdToEdit(int e)
+    {
+        this.itemIdToEdit = e;
+    }
+    
+    public String getDateNow()
+    {
+        return dateNow;
+    }
+    public void setDateNow(String e)
+    {
+        this.dateNow = e;
+    }
+    public boolean getIsAdmin(){
+        return userIsAdmin;
+    }
+    public void setIsAdmin(boolean isAdmin){
+        this.userIsAdmin = isAdmin;
+    }
     public String getItemImgURL()
     {
         return itemImgURL;
@@ -130,7 +177,7 @@ public class c implements Serializable{
     {
         return itemDateMax;
     }
-    public String getItemRamassage()
+    public int getItemRamassage()
     {
         return itemRamassage;
     }
@@ -146,7 +193,7 @@ public class c implements Serializable{
     {
         this.itemDateMax = e;
     }
-    public void setItemRamassage(String e)
+    public void setItemRamassage(int e)
     {
         this.itemRamassage = e;
     }
@@ -295,7 +342,7 @@ public class c implements Serializable{
                 PreparedStatement prepareStatementSQLFormat;
                 Connection connectionToBD = this.getConnexion();
 
-                String statementSQL = "INSERT INTO compte(email,cpostal,passe,gpslat,gpslon) VALUES(?,?,?,?,?)"; //insert
+                String statementSQL = "INSERT INTO compte(email,cpostal,passe,gpslat,gpslon,isadmin) VALUES(?,?,?,?,?,?)"; //insert
             
                 prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
                 prepareStatementSQLFormat.setString(1, userNewEmail);
@@ -303,6 +350,7 @@ public class c implements Serializable{
                 prepareStatementSQLFormat.setString(3, userNewPasse1);
                 prepareStatementSQLFormat.setString(4, userGPSlat);
                 prepareStatementSQLFormat.setString(5, userGPSlon);
+                prepareStatementSQLFormat.setInt(6, 0);
                 prepareStatementSQLFormat.executeUpdate(); 
                 
                 connectionToBD.close();
@@ -349,7 +397,7 @@ public class c implements Serializable{
                 dbGPSlat = rs.getString(5);//gsplat
                 dbGPSlon = rs.getString(6);//gpslon
                 dbTelephone = rs.getString(7);//telephone
-                dbPseudo = rs.getString(8);//pseudo
+                dbIsAdmin = rs.getBoolean(8);//isAdmin
             }
         }
         catch (SQLException ex){
@@ -363,7 +411,7 @@ public class c implements Serializable{
             userTelephone = dbTelephone;
             userCodePostal = dbCodePostal;
             userPasse = dbPasse;
-            userPseudo = dbPseudo;
+            userIsAdmin = dbIsAdmin;
             //itemIdItem = dbIdItem;
             
             if(dbGPSlon.isEmpty() || dbGPSlat.isEmpty()){
@@ -377,12 +425,6 @@ public class c implements Serializable{
         userZoom = "15";
         con.close();
         return "index";
-        
-//        this.mapMembre = new ArrayList<markerMembre>();
-//         this.mapMembre.add( new markerMembre(
-//                    1, "pseudo", "11.1111","22.2222"));
-//         this.mapMembre.add( new markerMembre(
-//                    2, "pseudo2", "21.1111","32.2222"));
     }       
     
     public void setItemsFromAccount() throws ClassNotFoundException, SQLException{
@@ -401,10 +443,10 @@ public class c implements Serializable{
                     this.items.add( new items(
                         rs.getInt(1),//iditem
                         dbIdCompte,
-                        rs.getString(3),//ramassageType
+                        rs.getInt(3),//ramassageType
                         rs.getString(4),//imgURL
-                        new Date(rs.getDate(5).getDate()),//date
-                        new Date(rs.getDate(6).getDate()),//dateMax
+                        new Date(rs.getDate(5).getTime()),//date
+                        new Date(rs.getDate(6).getTime()),//dateMax
                         rs.getString(7)//dispos
                     ));
                 }
@@ -495,30 +537,35 @@ public class c implements Serializable{
         userGPSlon = Double.toString(obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
     }
     
-    public String Publier() throws ClassNotFoundException, ParseException
+    public String publier() throws ClassNotFoundException, ParseException
     {
         try
             {
                 PreparedStatement prepareStatementSQLFormat;
                 Date dNow = new Date();
-                String strFormatDateMax = itemDateMax.replaceAll(" ,", "");
-                SimpleDateFormat SdFormatMax = new SimpleDateFormat("ddMMMMyyyy");
-                Date dateFormatDateMax = SdFormatMax.parse(strFormatDateMax);
+                SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+                Date dateFormatDateMax = sdFormat.parse(itemDateMax);
                 Connection connectionToBD = this.getConnexion();
 
-                String statementSQL = "INSERT INTO item(idCompte,ramassage,img,date,datemax) VALUES(?,?,?,?,?)"; //insert
+                String statementSQL = "INSERT INTO item(idCompte,ramassage,img,date,datemax,dispos) VALUES(?,?,?,?,?,?)"; //insert
             
                 prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
                 prepareStatementSQLFormat.setInt(1, dbIdCompte);
-                prepareStatementSQLFormat.setString(2, itemRamassage);           
+                prepareStatementSQLFormat.setInt(2, itemRamassage);           
                 prepareStatementSQLFormat.setString(3, itemImgURL);
-                prepareStatementSQLFormat.setDate(4, new java.sql.Date(dNow.getYear(),dNow.getMonth(),dNow.getDay()));
+                prepareStatementSQLFormat.setDate(4, new java.sql.Date(dNow.getTime()));
                 prepareStatementSQLFormat.setDate(5, new java.sql.Date(dateFormatDateMax.getTime()));
                 prepareStatementSQLFormat.setString(6, itemDispos);
                 prepareStatementSQLFormat.executeUpdate(); 
                 
                 connectionToBD.close();
                 
+                itemImgURL = "";
+                Date dN = new Date();
+                itemDateMax = sdFormat.format(dN);
+                itemRamassage = 0;
+                itemDispos = "";
+                setMarkers();
             }
             catch (SQLException ex){
                 System.out.println("in exec");
@@ -547,7 +594,7 @@ public class c implements Serializable{
                     rs.getString(5),//gsplat
                     rs.getString(6),//gpslon
                     rs.getString(7),//telephone
-                    rs.getString(8),//pseudo
+                    rs.getBoolean(8),//isAdmin
                     rs.getInt(9),//iditem
                     rs.getInt(11),//ramassageType
                     rs.getString(12),//imgURL
@@ -563,67 +610,8 @@ public class c implements Serializable{
         }
         con.close();
     }
-//      public void setMap(Map map) throws ClassNotFoundException, SQLException{
-//        //to set markers on map
-//        //http://biemond.blogspot.ca/2008/09/google-maps-for-jsf-gmaps4jsf-in.html
-//        this.map = map;  
-//        map.setLatitude(userGPSlat);  
-//        map.setLongitude(userGPSlon); 
-//        
-//        Marker mark = new Marker();
-//        EventListener event = new EventListener();
-//                
-////        mark.setLatitude(userGPSlat);
-////        mark.setLongitude(userGPSlon);
-////        mark.setJsVariable("centerMarkjs");
-////        mark.setId("centerMark");
-////        event.setEventName("clickCenterMark");  
-////        event.setJsFunction("clickHandlerCenterMarkjs");  
-////        mark.getChildren().add(event);  
-////        map.getChildren().add(mark);  
-//        
-//        ResultSet rs;
-//        PreparedStatement pst;
-//        Connection con = this.getConnexion();
-//        
-//        String stm = "select idCompte, gpslat, gpslon, pseudo from compte";
-//      
-//        try
-//        {
-//            pst = con.prepareStatement(stm);
-//            pst.executeQuery();
-//            rs = pst.getResultSet();
-//            while(rs.next()){
-//                dbIdCompte = rs.getInt(1);
-//                dbGPSlat = rs.getString(5);
-//                dbGPSlon = rs.getString(6);
-//                dbPseudo = rs.getString(15);
-//                
-//                mapMembreId.add(dbIdCompte);
-//                mapMembrePseudo.add(dbPseudo);
-//                
-//                //note: ici je peux calculer si on ajoute un mark pour le membre 
-//                //si la distance gpsLON - usergpsLON est a l'interieur de 5 km.
-//                //mark member on map
-//                mark = new Marker();  
-//                mark.setLatitude(dbGPSlat);  
-//                mark.setLongitude(dbGPSlon);  
-//                mark.setJsVariable("memberMark"+dbIdCompte+"js");  
-//                mark.setId("memberMark"+dbIdCompte); 
-//                event = new EventListener();  
-//                event.setEventName("clickMemberMark"+dbIdCompte);  
-//                event.setJsFunction("clickHandlerMemberMark"+dbIdCompte+"js"); 
-//                mark.getChildren().add(event);  
-//                map.getChildren().add(mark);  
-//            }
-//        }
-//        catch (SQLException ex){
-//            System.out.println("in exec");
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-    
-       public String setHtmlViewItem(int id)
+
+    public String setHtmlViewItem(int id)
     {
         String html;
         Date d = new Date();
@@ -633,7 +621,7 @@ public class c implements Serializable{
             if(i.getIdItem()==id)
                 item = i;
         } 
-        int expiration = (int)((item.getDate().getDate() - d.getDate()));
+        int expiration = ((item.getDateMax().getDate() - dateNowDate.getDate())+((item.getDateMax().getMonth() - dateNowDate.getMonth())*30)+((item.getDateMax().getYear()-dateNowDate.getYear())*365));
         html = "<div class=\"card\">" +
 "    <div class=\"card-image waves-effect waves-block waves-light\">" +
 "      <img class=\"activator\" width=\"240px\" height=\"210px\" src=\"";
@@ -665,12 +653,6 @@ public class c implements Serializable{
         html+="<tr><td><b>Code postal:</b></td><td>";
         html+= item.getCpostal();
        html+="</td></tr>";
-       if(item.getPseudo()!=null)
-       {
-            html+="<tr><td><b>Contact:</b></td><td>";
-           html+= item.getPseudo();
-           html+="</td></tr>";
-       }
        if(item.getEmail()!=null)
        {
             html+="<tr><td><b>Email:</b></td><td>";
@@ -703,6 +685,205 @@ public class c implements Serializable{
        
         html+="</table></div>";
         return html;
-
+    }
+    
+    public void runDeleteOldItems() throws ClassNotFoundException
+    {
+        try
+        {            
+            PreparedStatement prepareStatementSQLFormat;
+            Connection connectionToBD = this.getConnexion();
+            for(markerItems i : mapItems)
+            {
+                int diff = (i.getDateMax().getDate() - dateNowDate.getDate())+((i.getDateMax().getMonth() - dateNowDate.getMonth())*30)+((i.getDateMax().getYear()-dateNowDate.getYear())*365);
+                if(diff<0)
+                {
+                    String statementSQL = "DELETE FROM item WHERE idItem=?";
+                    prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
+                    prepareStatementSQLFormat.setInt(1, i.getIdItem());
+                    prepareStatementSQLFormat.executeUpdate();
+                }
+            }            
+            connectionToBD.close();
+        }
+        catch (SQLException ex){
+            System.out.println("in exec");
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    public String delete() throws ClassNotFoundException, SQLException
+    {
+        try
+        {            
+            int id = itemIdToDelete;
+            PreparedStatement prepareStatementSQLFormat;
+            Connection connectionToBD = this.getConnexion();
+            String statementSQL = "DELETE FROM item WHERE idItem=?";
+            prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
+            prepareStatementSQLFormat.setInt(1, id);
+            prepareStatementSQLFormat.executeUpdate();
+            setItemsFromAccount();
+            connectionToBD.close();
+        }
+        catch (SQLException ex){
+            System.out.println("in exec");
+            System.out.println(ex.getMessage());
+        }
+        return "gerer.xhtml";
+    }
+    
+    public String delete2() throws ClassNotFoundException, SQLException
+    {
+        try
+        {            
+            int id = itemIdToDelete;
+            PreparedStatement prepareStatementSQLFormat;
+            Connection connectionToBD = this.getConnexion();
+            String statementSQL = "DELETE FROM item WHERE idItem=?";
+            prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
+            prepareStatementSQLFormat.setInt(1, id);
+            prepareStatementSQLFormat.executeUpdate();
+            setMarkers();
+            connectionToBD.close();
+        }
+        catch (SQLException ex){
+            System.out.println("in exec");
+            System.out.println(ex.getMessage());
+        }
+        return "gerertous.xhtml";
+    }
+    
+        public String modif() throws ClassNotFoundException, SQLException, ParseException
+    {
+        try
+        {            
+            int id = itemIdToEdit;
+            SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+            Date dateFormatDateMax = sdFormat.parse(itemDateMax);
+            PreparedStatement prepareStatementSQLFormat;
+            Connection connectionToBD = this.getConnexion();
+            String statementSQL = "UPDATE item SET ramassage=?, img=?, datemax=? WHERE idItem=?";
+            prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
+            prepareStatementSQLFormat.setInt(1, itemRamassage);
+            prepareStatementSQLFormat.setString(2, itemImgURL);
+            prepareStatementSQLFormat.setDate(3, new java.sql.Date(dateFormatDateMax.getTime()) );
+            prepareStatementSQLFormat.setInt(4, id);
+            prepareStatementSQLFormat.executeUpdate();
+            setItemsFromAccount();
+            connectionToBD.close();
+        }
+        catch (SQLException ex){
+            System.out.println("in exec");
+            System.out.println(ex.getMessage());
+        }
+        
+        return "gerer.xhtml";
+    }
+        
+         public String modif2() throws ClassNotFoundException, SQLException, ParseException
+    {
+        try
+        {            
+            int id = itemIdToEdit;
+            SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+            Date dateFormatDateMax = sdFormat.parse(itemDateMax);
+            PreparedStatement prepareStatementSQLFormat;
+            Connection connectionToBD = this.getConnexion();
+            String statementSQL = "UPDATE item SET ramassage=?, img=?, datemax=? WHERE idItem=?";
+            prepareStatementSQLFormat = connectionToBD.prepareStatement(statementSQL);
+            prepareStatementSQLFormat.setInt(1, itemRamassage);
+            prepareStatementSQLFormat.setString(2, itemImgURL);
+            prepareStatementSQLFormat.setDate(3, new java.sql.Date(dateFormatDateMax.getTime()) );
+            prepareStatementSQLFormat.setInt(4, id);
+            prepareStatementSQLFormat.executeUpdate();
+            setMarkers();
+            connectionToBD.close();
+        }
+        catch (SQLException ex){
+            System.out.println("in exec");
+            System.out.println(ex.getMessage());
+        }
+        return "gerertous.xhtml";
+    }
+    
+    public String loadmespubs() throws ClassNotFoundException, SQLException{
+        setItemsFromAccount();
+        dateNowDate = new Date();
+        return "gerer.xhtml";
+    }
+    
+    public String loadlespubs() throws ClassNotFoundException, SQLException{
+        setMarkers();
+         dateNowDate = new Date();
+        return "gerertous.xhtml";
+    }
+    
+    public String loadCompte() throws ClassNotFoundException, SQLException{
+        setItemsFromAccount();
+        setMarkers();
+        return "compte.xhtml";
+    }
+    
+    public String loadModif(int id) throws ParseException{
+        itemIdToEdit = id;
+        for(items i : items)
+        {
+            if(i.getIdItem() == id)
+            {
+                SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+                String dateFormatDateMax = sdFormat.format(i.getDateMax());
+                itemImgURL = i.getImg();
+                itemDateMax = dateFormatDateMax;
+                itemRamassage = i.getRamassage();
+            }
+        }
+        
+        return "modif.xhtml?id="+id;
+    }
+    public String loadModif2(int id){
+        itemIdToEdit = id;
+        for(markerItems i : mapItems)
+        {
+            if(i.getIdItem() == id)
+            {
+                SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+                String dateFormatDateMax = sdFormat.format(i.getDateMax());
+                itemImgURL = i.getImg();
+                itemDateMax = dateFormatDateMax;
+                itemRamassage = i.getRamassage();
+            }
+        }
+        
+        return "modif_1.xhtml?id="+id;
+    }
+    
+    public String loadDelete(int id){
+        itemIdToDelete = id;
+        return "delete.xhtml?id="+id;
+    }
+    
+    public String loadDelete2(int id){
+        itemIdToDelete = id;
+        return "delete_1.xhtml?id="+id;
+    }
+    
+    public String loadGerer(){
+        return "gerer.xhtml";
+    }
+    
+    public String loadPublier(){
+        itemImgURL = "";
+        SimpleDateFormat sdFormat = new SimpleDateFormat("dd MMMM, yyyy");
+        Date dN = new Date();
+        itemDateMax = sdFormat.format(dN);
+        itemRamassage = 1;
+        return "publier.xhtml";
+    }
+    public String loadIndex(){
+        return "index.xhtml";
+    }
+    public String loadConnect(){
+        return "connect.xhtml";
     }
 }

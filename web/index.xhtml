@@ -13,12 +13,13 @@
             <ui:define name="title">Index</ui:define>
     		<ui:define name="content">
                    <section class="container">
-
+                       <c:if test="#{c.connecterStatus}">
                         <div class="fixed-action-btn">
                             <h:form>
-                                <h:commandLink class="btn-floating btn-large waves-effect waves-light yellow darken-4" action="publier.xhtml"><i class="large material-icons">add</i></h:commandLink>
+                                <h:commandLink class="btn-floating btn-large waves-effect waves-light yellow darken-4" action="#{c.loadPublier()}"><i class="large material-icons">add</i></h:commandLink>
                             </h:form>
                         </div>
+                           </c:if>
 
                         <!--#{c.email}-->
                         <!--#{c.passe}-->

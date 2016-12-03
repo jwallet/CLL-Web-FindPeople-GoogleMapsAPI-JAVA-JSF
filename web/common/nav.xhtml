@@ -10,29 +10,29 @@
 	    <ui:composition>
                 <h:form>
                 <ul id="dropDownMenu" class="side-nav">
-                     <li><h:commandLink action="publier.xhtml">Annoncer un item à donner</h:commandLink></li>
-                    <li><a href="#!">two</a></li>
-                    <li><a href="#!">three</a></li>
+                    <c:if test="#{c.connecterStatus}"><li><h:commandLink action="#{c.loadPublier()}">Annoncer un item à donner</h:commandLink></li></c:if>
                 </ul>                            
                 <div class="navbar-fixed">
                     <nav class="grey">
                         <div class="nav-wrapper">
                             
-                            <a href="index.xhtml" class="brand-logo center"><img src='resources/images/qb.png' height='56' width='auto'/></a>   
+                            <a href="#{c.loadIndex()}" class="brand-logo center"><img src='resources/images/qb.png' height='56' width='auto'/></a>   
                             <a href="#" data-activates="dropDownMenu" class="button-collapse"><i class="material-icons">menu</i></a>
                             
                             <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
                                 <c:choose>
-                                <c:when test="#{!empty c.tempCodePostal || c.connecterStatus}"><c:if test="#{empty c.tempCodePostal}"><li><h:commandLink action="index.xhtml"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></h:commandLink></li></c:if></c:when>
+                                <c:when test="#{!empty c.tempCodePostal || c.connecterStatus}"><c:if test="#{empty c.tempCodePostal}"><li><h:commandLink action="#{c.loadIndex()}"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></h:commandLink></li></c:if></c:when>
                                 <c:otherwise test="#{empty c.tempCodePostal}"><c:if test="#{empty c.tempCodePostal}"><li><a href="#modal-localisation"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></a></li></c:if></c:otherwise>
                                 </c:choose>
-                                <c:if test="#{c.connecterStatus}"><li><h:commandLink action="compte.xhtml"><i class="large material-icons left">person</i><span class="hide-on-small-only">Compte</span></h:commandLink></li></c:if>
-                                <c:if test="#{!c.connecterStatus}"><li><h:commandLink action="connect.xhtml"><i class="large material-icons left">person</i><span class="hide-on-small-only">Se connecter</span></h:commandLink></li></c:if>
+                                <c:if test="#{c.connecterStatus}"><li><h:commandLink action="#{c.loadCompte()}"><i class="large material-icons left">person</i><span class="hide-on-small-only">Compte</span></h:commandLink></li></c:if>
+                                <c:if test="#{!c.connecterStatus}"><li><h:commandLink action="#{c.loadConnect()}"><i class="large material-icons left">person</i><span class="hide-on-small-only">Se connecter</span></h:commandLink></li></c:if>
                             </ul>
 
-                            <ul class="hide-on-med-and-down">
-                                <li><h:commandLink action="publier.xhtml">Annoncer un item à donner</h:commandLink></li>                               
-                            </ul> 
+                            <c:if test="#{c.connecterStatus}">
+                                <ul class="hide-on-med-and-down">
+                                    <li><h:commandLink action="#{c.loadPublier()}">Annoncer un item à donner</h:commandLink></li>                               
+                                </ul>
+                            </c:if>
                             
                         </div>
                         

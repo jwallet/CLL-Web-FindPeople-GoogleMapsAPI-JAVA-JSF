@@ -49,7 +49,7 @@
                                 <div class="col s6">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">my_location</i>
-                                        <input type="text" id="ins_code_postal" class="validate" required='true' maxlength="6" jsf:value='#{c.newCPostal}'/>
+                                        <input type="text" id="ins_code_postal" class="validate" required='true' pattern="[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]" jsf:value='#{c.newCPostal}'/>
                                         <label for="icon_prefix">Code postal</label>
                                     </div>
                                 </div>

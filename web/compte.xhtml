@@ -17,10 +17,11 @@
                         <div class="collection">
                             <h:commandLink class="collection-item green-text" action="index.xhtml"><i class="medium left material-icons green-text">map</i><p style="font-size:140%;">Voir la carte</p></h:commandLink>
                                 <!--<h:commandLink class="collection-item green-text" action="#one!"><i class="medium left material-icons green-text">chat</i><p style="font-size:140%;">Messagerie interne<span class="badge">12</span><span class="new badge">2</span></p></h:commandLink>-->
-                                <h:commandLink class="collection-item green-text" action="#one!"><i class="medium left material-icons green-text">edit</i><p style="font-size:140%;">Modifier mes publications<span class="badge">#{c.items.size()}</span></p></h:commandLink>
+                                <h:commandLink class="collection-item green-text" action="#{c.loadmespubs}"><i class="medium left material-icons green-text">edit</i><p style="font-size:140%;">Modifier mes publications<span class="badge">#{c.items.size()}</span></p></h:commandLink>
                                 <!--admin-->
-                                <h:commandLink class="collection-item red-text" action="#one!"><i class="medium left material-icons red-text">edit</i><p style="font-size:140%;">Gérer les publications du site<span class="badge">#{c.mapItems.size()}</span></p></h:commandLink>
-                                
+                                <c:if test="#{c.isAdmin}">
+                                    <h:commandLink class="collection-item red-text" action="#{c.loadlespubs}"><i class="medium left material-icons red-text">edit</i><p style="font-size:140%;">Gérer les publications du site<span class="badge">#{c.mapItems.size()}</span></p></h:commandLink>
+                                </c:if>
                                 <!--admin-->
                                 <h:commandLink class="collection-item green-text" action="#one!"><i class="medium left material-icons green-text">person</i><p style="font-size:140%;">Modifier mon profil</p></h:commandLink>
                                 <h:commandLink class="collection-item green-text" action="#four!"><i class="medium left material-icons green-text">vpn_key</i><p style="font-size:140%;">Modifier mot de passe</p></h:commandLink>
