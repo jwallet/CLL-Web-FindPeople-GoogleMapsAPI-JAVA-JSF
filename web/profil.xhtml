@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+    <ui:composition template="common/template.xhtml">
+            <ui:define name="title">Profil</ui:define>
+    		<ui:define name="content">
+                    <section class="container">
+                        <c:choose>
+                            <c:when test='#{c.connecterStatus}'>
+                                <div class="col s12">
+                            <h4>Modifier mes renseignements</h4>
+                            <br/>
+                        <h:form class="col s12">
+                            <div class="col">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">email</i>
+                                    <input type="email" id="ins_email" class="validate" required='true' jsf:value='#{c.email}'/>
+                                    <label for="icon_prefix">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">my_location</i>
+                                    <input type="text" id="ins_code_postal" class="validate" required='true' maxlength="6" jsf:value='#{c.codePostal}'/>
+                                    <label for="icon_prefix">Code postal</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">phone</i>
+                                    <input id="icon_prefix" type="tel" pattern="\d{3}[\- ]\d{3}[\- ]\d{4}" class="validate" jsf:value="#{c.telephone}"/>
+                                    <label for="icon_prefix">Telephone</label>
+                                </div>
+                            </div>  
+                            <div class="col">
+                                <h:commandButton action="#{c.changemyinfos()}" value="Enregistrer" class="waves-effect waves-light btn"/>
+                            </div>
+                        </h:form>
+                    <br/>
+                        </div>   
+                            </c:when>
+                            <c:otherwise>
+                                <h4>Erreur</h4>
+                                <p>Vous n'avez pas l'accès à cette page.</p>
+                            </c:otherwise>
+                        </c:choose>
+                                            
+                    </section>  
+                     </ui:define>            
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+    <ui:composition template="common/template.xhtml">
+            <ui:define name="title">Mot de passe</ui:define>
+    		<ui:define name="content">
+                    <section class="container">
+                        <c:choose>
+                            <c:when test='#{c.connecterStatus}'>
+                               <div class="col s12">
+                            <h4>Modifier mon mot de passe</h4>
+                             <h:messages styleClass="errorMessage red-text"/>
+                            <br/>
+                        <h:form class="col s12">                           
+                           
+                            <div class="col">
+                                <div class="input-field col s6">   
+                                    <i class="material-icons prefix">lock</i>
+                                    <h:inputSecret id="ins_passe" styleClass="validate" required='true' value='#{c.tryUserPasse}'
+                                                   requiredMessage="Mot de passe actuel requis"/>
+                                    <label for="icon_prefix">Mot de passe actuel</label>
+                                </div>  
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">   
+                                    <i class="material-icons prefix">lock</i>
+                                    <h:inputSecret id="ins_passe1" styleClass="validate" required='true' value='#{c.newPasse1}'
+                                                   requiredMessage="Nouveau mot de passe requis"/>
+                                    <label for="icon_prefix">Nouveau mot de passe</label>
+                                </div>  
+                            </div>
+                            <div class="col">
+                                <div class="input-field col s6">          
+                                    <i class="material-icons prefix">lock</i>
+                                    <h:inputSecret id="ins_passe2" styleClass="validate" required='true' value='#{c.newPasse2}'
+                                                   requiredMessage="Confirmation nouveau mot de passe requis"/>
+                                    <label for="icon_prefix">Nouveau mot de passe</label>
+                                </div>
+                            </div>  
+                            
+                            <div class="col">
+                                <f:event listener="#{c.changemypasscheck}" type="postValidate" />
+                                <h:commandButton action="#{c.changemypass()}" value="Enregistrer" class="waves-effect waves-light btn"/>
+                            </div>
+                        </h:form>
+                    <br/>
+                        </div>    
+                            </c:when>
+                            <c:otherwise>
+                                <h4>Erreur</h4>
+                                <p>Vous n'avez pas l'accès à cette page.</p>
+                            </c:otherwise>
+                        </c:choose>
+                          
+                    </section>  
+                     </ui:define>            
+        </ui:composition>
+    </body>
+</html>

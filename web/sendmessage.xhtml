@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+        <ui:composition template="common/template.xhtml">
+            <ui:define name="title">Communiquer</ui:define>
+    		<ui:define name="content">
+                    <section class="container">
+                        <f:metadata>
+                            <f:viewParam name="msgIdItem" value="#{c.msgIdItem}" />
+                            <f:viewParam name="msgIdComptePour" value="#{c.msgIdComptePour}" />
+                        </f:metadata>
+                            <div class="col s12">
+                            <h4>Ecrire à l'annonceur</h4>
+                            <br/>
+                            <h:form class="col s12">
+                                
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                      <i class="material-icons prefix">mode_edit</i>
+                                      <textarea id="icon_prefix" class="materialize-textarea" jsf:value='#{c.msgContenu}'></textarea>
+                                      <label for="icon_prefix">Message</label>
+                                    </div>
+                                  </div>  
+                                <div class="input-field col s12">
+                                    <h:commandButton action="#{c.sendMessage()}" value="Envoyer le message" class="waves-effect waves-light btn"/>
+                                </div>
+                            </h:form>
+                            <br/>
+                        </div>                                               
+                    </section>    
+                    <script type="text/javascript">
+                    $( document ).ready(function(){
+                        $('.datepicker').pickadate({
+                            selectMonths: false,
+                            selectYears: 1
+                        });
+                        $('input:radio[name="j_idt53:j_idt63"]').change(function(){
+                            if($(this).is(':checked'))
+                            {
+                                if($(this).attr('id') === "j_idt53:j_idt63:0")
+                                {
+                                    $('#formPersonne').removeClass('hide');
+                                    $('#formBordRue').addClass('hide');
+                                }
+                                else{
+                                    $('#formBordRue').removeClass('hide');
+                                    $('#formPersonne').addClass('hide');
+                                }
+                            }
+                            else
+                            {
+                                $('#formPersonne').removeClass('hide');
+                            }
+                        });
+                    });
+                    </script>
+                </ui:define>            
+        </ui:composition>
+</html>

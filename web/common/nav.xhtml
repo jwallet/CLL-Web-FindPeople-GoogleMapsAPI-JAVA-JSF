@@ -21,8 +21,20 @@
                             
                             <ul class="fixed-action-btn right" style="position: relative;right:0; padding:0; top:0;">
                                 <c:choose>
-                                <c:when test="#{!empty c.tempCodePostal || c.connecterStatus}"><c:if test="#{empty c.tempCodePostal}"><li><h:commandLink action="#{c.loadIndex()}"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></h:commandLink></li></c:if></c:when>
-                                <c:otherwise test="#{empty c.tempCodePostal}"><c:if test="#{empty c.tempCodePostal}"><li><a href="#modal-localisation"><i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span></a></li></c:if></c:otherwise>
+                                <c:when test="#{!empty c.tempCodePostal || c.connecterStatus}">
+                                    <!--<c:if test="#{empty c.tempCodePostal}">-->
+                                        <li><h:commandLink action="#{c.loadIndex()}">
+                                                <i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span>
+                                            </h:commandLink></li>
+                                    <!--</c:if>-->
+                                </c:when>
+                                <c:otherwise test="#{empty c.tempCodePostal}">
+                                    <!--<c:if test="#{empty c.tempCodePostal}">-->
+                                        <li><a href="#modal-localisation">
+                                                <i class="material-icons left">location_on</i><span class="hide-on-small-only">Localisation</span>
+                                            </a></li>
+                                    <!--</c:if>-->
+                                </c:otherwise>
                                 </c:choose>
                                 <c:if test="#{c.connecterStatus}"><li><h:commandLink action="#{c.loadCompte()}"><i class="large material-icons left">person</i><span class="hide-on-small-only">Compte</span></h:commandLink></li></c:if>
                                 <c:if test="#{!c.connecterStatus}"><li><h:commandLink action="#{c.loadConnect()}"><i class="large material-icons left">person</i><span class="hide-on-small-only">Se connecter</span></h:commandLink></li></c:if>
